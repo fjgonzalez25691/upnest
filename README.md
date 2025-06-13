@@ -54,6 +54,8 @@
 ## Tech Stack
 
 - **Frontend:** React (JavaScript + SWC)
+- **Build tool:** Vite
+- **Styles:** Tailwind CSS
 - **Authentication:** AWS Cognito
 - **Backend:** AWS Lambda (Python)
 - **API Gateway:** For connecting frontend and backend
@@ -68,7 +70,7 @@
 
 1. Clone the repo:
     ```bash
-    git clone https://github.com/your-username/upnest.git
+    git clone https://github.com/fjgonzalez25691/upnest.git
     cd upnest
     ```
 2. Install dependencies:
@@ -88,7 +90,7 @@
 
 ## MVP Requirements
 
-See [`/docs/requirements.md`](./docs/requirements.md) for detailed requirements, scope, and user stories.
+See [`/docs/MVP.md`](./docs/MVP.md) for detailed requirements, scope, and user stories.
 
 ---
 

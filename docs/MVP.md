@@ -67,14 +67,16 @@ UpNest is a web application designed to help parents track their baby's growth b
 
 ## 6. Technical Requirements
 
-- React frontend
-- AWS Lambda (Python) backend
-- API Gateway (REST API)
-- DynamoDB (NoSQL database)
-- AWS Cognito (authentication)
-- Amazon Bedrock (optional, AI)
-- Recharts (for charting)
-- GitHub for source control
+- **React** frontend
+- **Vite** as the build too.
+- **Tailwind CSS** as the CSS framework
+- **AWS Lambda** (Python) backend
+- **API Gateway** (REST API)
+- **DynamoDB** (NoSQL database)
+- **AWS Cognito** (authentication)
+- **Amazon Bedrock** (optional, AI)
+- **Recharts** (for charting)
+- **GitHub** for source control
 - Documentation in `/docs`
 
 ---
