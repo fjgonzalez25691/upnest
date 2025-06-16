@@ -1,1 +1,14 @@
 @import "tailwindcss";
+
+/* Estilos personalizados para la aplicación */
+@theme {
+  --font-display: "Inter", "sans-serif";
+  --color-primary: #3B82F6;
+  --color-secondary: #A78BFA;
+  --color-success: #22C55E;
+  --color-danger: #F43F5E;
+  --color-background: #F9FAFB;
+  --color-surface: #FFFFFF;
+  --color-text-main: #22223B;
+  --color-text-subtle: #64748B;
+}
