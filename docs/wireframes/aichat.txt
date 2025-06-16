@@ -1,0 +1,12 @@
++-----------------------------------+
+|         AI Chat                   |
++-----------------------------------+
+|                                   |
+|   [Chat history]                  |
+|   User: "Is my baby growing well?"|
+|   AI:   "Your baby's weight is on |
+|          the 50th percentile."    |
+|                                   |
+|   [ Input: ____________________ ] |
+|   [   Send   ]                    |
++-----------------------------------+
