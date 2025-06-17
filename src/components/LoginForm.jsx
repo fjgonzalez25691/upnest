@@ -1,6 +1,7 @@
 // .scr/components/LoginForm.jsx
 // Purpose: A login form component for the UpNest application. Used to collect user credentials for authentication.
 import React from "react";
+import { Link } from "react-router-dom";
 import InputField from "./InputField";
 import PrimaryButton from "./PrimaryButton";
 
@@ -26,9 +27,13 @@ const LoginForm = ({ onSubmit, values, onChange }) => (
     <PrimaryButton type="submit" className="w-full mt-4">
       Log In
     </PrimaryButton>
+    <div className="text-center mt-4">
+      <span className="text-textsubtle">
+        Don't have an account?{" "}
+        <Link to="/register" className="text-primary underline hover:text-primary/80">Register</Link>
+      </span>
+    </div>
   </form>
 );
 
 export default LoginForm;
-
-// This LoginForm component provides a simple login interface for users to enter their email and password. It uses the InputField and PrimaryButton components for consistent styling and functionality.
