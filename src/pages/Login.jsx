@@ -1,14 +1,32 @@
 // src/pages/Login.jsx
-import React from "react";
+import React, { useState } from "react";
+import LoginForm from "../components/LoginForm";
 
-// This is a simple login page component
-// that can be expanded with a login form later.
+
 
 const Login = () => {
+  const [values, setValues] = useState({
+    email: "",
+    password: ""
+  });
+
+  const handleChange = (e) => {
+    setValues({
+      ...values,
+      [e.target.name]: e.target.value
+    });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // authentication logic goes here
+    console.log("Email:", values.email);
+    console.log("Password:", values.password);
+  };
+
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen">
-      <h1 className="text-2xl font-bold mb-4">Login</h1>
-      {/* TODO: Add LoginForm component */}
+    <div className="min-h-screen flex items-center justify-center bg-background">
+      <LoginForm values={values} onChange={handleChange} onSubmit={handleSubmit} />
     </div>
   );
 };

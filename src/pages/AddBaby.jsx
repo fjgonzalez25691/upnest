@@ -1,19 +1,38 @@
-// src/pages/AddBaby.jsx
-import React from "react";  
+// .src/pages/AddBaby.jsx
+// Form for adding a new baby
 
-// This is a simple AddBaby page component
-// that can be expanded with a form to add baby details later.
+import React, { useState } from "react";
+import AddBabyForm from "../components/AddBabyForm";
 
 const AddBaby = () => {
+  const [values, setValues] = useState({
+    name: "",
+    dob: "",
+    premature: false,
+    gestationalWeek: "",
+  });
+
+  const handleChange = (e) => {
+    const { name, type, value, checked } = e.target;
+    setValues((prev) => ({
+      ...prev,
+      [name]: type === "checkbox" ? checked : value,
+      // Si desmarcas prematuro, limpias el valor de semana
+      ...(name === "premature" && !checked ? { gestationalWeek: "" } : {}),
+    }));
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log("Baby registration values:", values);
+    // Aquí irá la lógica real de registro
+  };
+
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen">
-      <h1 className="text-2xl font-bold mb-4">Add Baby</h1>
-      {/* TODO: Add AddBabyForm component */}
+    <div className="min-h-screen flex items-center justify-center bg-background">
+      <AddBabyForm values={values} onChange={handleChange} onSubmit={handleSubmit} />
     </div>
   );
 };
 
 export default AddBaby;
-
-// This component serves as a placeholder for the Add Baby page.
-// It can be expanded with a form to add baby details later.

@@ -1,16 +1,34 @@
 // src/pages/Register.jsx
-import React from "react";  
+// Description: Register page component for UpNest application
+// Purpose: This page allows users to register for a new account in the UpNest application.
+import React, { useState} from "react";  
+import RegisterForm from "../components/RegisterForm";
 
-// This is a simple registration page component
-// that can be expanded with a registration form later.
+
+
 const Register = () => {
+  const [values, setValues] = useState({
+    name: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+  });
+
+  const handleChange = (e) => {
+    setValues({ ...values, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log("Register values:", values);
+    // Registration logic goes here
+  };
+
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen">
-      <h1 className="text-2xl font-bold mb-4">Register</h1>
-      {/* TODO: Add RegisterForm component */}
+    <div className="min-h-screen flex items-center justify-center bg-background">
+      <RegisterForm values={values} onChange={handleChange} onSubmit={handleSubmit} />
     </div>
   );
 };
 
 export default Register;
-
