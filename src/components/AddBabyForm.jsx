@@ -1,6 +1,7 @@
 import React from "react";
 import InputField from "./InputField";
 import PrimaryButton from "./PrimaryButton";
+import SelectField from "./SelectField";
 
 const AddBabyForm = ({ values, onChange, onSubmit }) => (
   <form className="bg-surface p-6 rounded-2xl shadow-md max-w-sm mx-auto" onSubmit={onSubmit}>
@@ -19,6 +20,20 @@ const AddBabyForm = ({ values, onChange, onSubmit }) => (
       value={values.dob}
       onChange={onChange}
     />
+    <SelectField
+      label="Sex"
+      name="sex"
+      value={values.sex}
+      onChange={onChange}
+      required
+      placeholder="Select baby's sex"
+      options={[
+        { value: "male", label: "Male" },
+        { value: "female", label: "Female" }
+        
+      ]}
+    />
+
     <div className="mb-4">
       <label className="block text-textmain mb-1">
         <input
