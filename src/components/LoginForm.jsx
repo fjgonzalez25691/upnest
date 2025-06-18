@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import InputField from "./InputField";
 import PrimaryButton from "./PrimaryButton";
 
-const LoginForm = ({ onSubmit, values, onChange }) => (
+const LoginForm = ({ onSubmit, values, onChange, onCancel }) => (
   <form className="bg-surface p-6 rounded-2xl shadow-md max-w-sm mx-auto" onSubmit={onSubmit}>
     <h2 className="text-xl font-bold mb-4 text-primary">Login</h2>
     <InputField
@@ -26,6 +26,13 @@ const LoginForm = ({ onSubmit, values, onChange }) => (
     />
     <PrimaryButton type="submit" className="w-full mt-4">
       Log In
+    </PrimaryButton>
+    <PrimaryButton 
+      type="button" 
+      className="w-full mt-4" 
+      onClick={onCancel}
+      variant="cancel">
+      Cancel
     </PrimaryButton>
     <div className="text-center mt-4">
       <span className="text-textsubtle">

@@ -25,7 +25,7 @@ const Register = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background">
+    <div className=" flex items-center justify-center w-full max-w-xl mx-auto bg-background">
       <RegisterForm values={values} onChange={handleChange} onSubmit={handleSubmit} />
     </div>
   );

@@ -25,7 +25,7 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background">
+    <div className=" flex items-center justify-center bg-background">
       <LoginForm values={values} onChange={handleChange} onSubmit={handleSubmit} />
     </div>
   );

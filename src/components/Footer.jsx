@@ -5,7 +5,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 const Footer = () => (
-  <footer className="bg-surface border-t py-4 mt-10 text-center text-textsubtle text-sm w-full">
+  <footer className="bg-surface border-t py-4  text-center text-textsubtle text-sm w-full">
     <div className="max-w-5xl mx-auto flex flex-col md:flex-row items-center justify-between gap-2 px-4">
       <span>
         © {new Date().getFullYear()} UpNest. All rights reserved.
