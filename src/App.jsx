@@ -7,6 +7,7 @@ import Register from "./pages/Register";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import AddBaby from "./pages/AddBaby";
+import AddGrowthData from "./pages/AddGrowthData";
 import BabyProfile from "./pages/BabyProfile";
 import GrowthChart from "./pages/GrowthChart";
 import AIChat from "./pages/AIChat";
@@ -35,6 +36,7 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/add-baby" element={<AddBaby />} />
+            <Route path="/add-growth-data/:babyId" element={<AddGrowthData />} />
             <Route path="/baby/:babyId" element={<BabyProfile />} />
             <Route path="/growth-chart/:babyId" element={<GrowthChart />} />
             <Route path="/ai-chat" element={<AIChat />} />

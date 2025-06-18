@@ -5,8 +5,8 @@ import React from "react";
 import InputField from "./InputField";
 import PrimaryButton from "./PrimaryButton";
 
-const GrowthDataForm = ({ values, onChange, onSubmit }) => (
-  <form className="bg-surface p-6 rounded-2xl shadow-md w-full max-w-md mx-auto" onSubmit={onSubmit}>
+const GrowthDataForm = ({ values, onChange, onSubmit, onCancel }) => (
+  <form className="bg-surface p-3 rounded-2xl shadow-md w-full max-w-md mx-auto" onSubmit={onSubmit}>
     <h2 className="text-xl font-bold mb-4 text-primary">Add Growth Data</h2>
     <InputField
       label="Weight (kg)"
@@ -49,9 +49,15 @@ const GrowthDataForm = ({ values, onChange, onSubmit }) => (
       onChange={onChange}
       required
     />
-    <PrimaryButton type="submit" className="w-full mt-4">
-      Save
-    </PrimaryButton>
+    <div className="flex flex-col sm:flex-row gap-2 mt-4">
+      <PrimaryButton type="button" variant="save" className="w-full mb-2" onClick={onSubmit}>
+        Save
+      </PrimaryButton>
+      <PrimaryButton type="button" variant="cancel" className="w-full mb-2" onClick={onCancel}>
+        Cancel
+      </PrimaryButton>
+    </div>
+   
   </form>
 );
 
