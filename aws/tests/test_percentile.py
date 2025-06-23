@@ -4,7 +4,7 @@ Checks correct calculation for a typical baby girl,
 and verifies error handling for missing fields.
 """
 
-from aws.lambdas.percentil.lambda_function import lambda_handler
+from aws.lambdas.percentile.lambda_function import lambda_handler
 
 def test_percentile_girl_3months():
     """

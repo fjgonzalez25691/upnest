@@ -1,0 +1,28 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: OMS Percentile Lambda Function for UpNest Hackathon
+
+Resources:
+  PercentileFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: upnest-percentile
+      Handler: lambda_function.lambda_handler
+      Runtime: python3.11
+      CodeUri: .
+      Timeout: 10
+      MemorySize: 512
+      Policies: AWSLambdaBasicExecutionRole
+      Environment:
+        Variables:
+          LOG_LEVEL: INFO
+      # If you later want to use DynamoDB, add permissions here
+      # Policies:
+      #   - AWSLambdaBasicExecutionRole
+      #   - AmazonDynamoDBFullAccess
+
+# Outputs are optional but useful for retrieving ARNs and function URLs
+Outputs:
+  PercentileFunctionArn:
+    Description: "ARN of the Lambda function"
+    Value: !GetAtt PercentileFunction.Arn
