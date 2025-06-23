@@ -1,6 +1,7 @@
 {
-    "weight": 6.5,
+    "weight": 5.350,
     "height": 62,
-    "age_months": 3,
-    "sex": "female"
+    "date_birth": "2025-03-25",
+    "sex": "female",
+    "date_measurement": "2025-06-22"
 }
