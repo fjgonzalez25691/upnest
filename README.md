@@ -15,6 +15,8 @@
   - [Getting Started](#getting-started)
   - [MVP Requirements](#mvp-requirements)
   - [Screenshots](#screenshots)
+  - [API Specification](#api-specification)
+    - [OpenAPI (Swagger) Specification](#openapi-swagger-specification)
   - [License](#license)
   - [Future Roadmap](#future-roadmap)
   - [Acknowledgements](#acknowledgements)
@@ -99,6 +101,108 @@ See [`/docs/MVP.md`](./docs/MVP.md) for detailed requirements, scope, and user s
 *Add here screenshots or screen mockups as you develop!*
 
 ---
+
+## API Specification
+
+UpNest exposes its backend percentile calculation through a RESTful HTTP API via AWS API Gateway.
+
+- **API Endpoint:** *[To be added after deployment, e.g., **`https://xxxx.execute-api.eu-south-2.amazonaws.com/percentile`**]*
+- **Request method:** `POST`
+- **Request/response format:** See below
+
+The current MVP implements only weight percentile calculation; additional metrics may be added in future versions.
+
+### OpenAPI (Swagger) Specification
+
+The full OpenAPI YAML can be found at [`/aws/lambdas/percentile/openapi.yaml`](./aws/lambdas/percentile/openapi.yaml). A summary is below:
+
+```yaml
+openapi: 3.0.3
+info:
+  title: UpNest Percentile API
+  description: API for calculating baby weight percentiles using WHO standards. (MVP: weight only)
+  version: "1.0.0"
+servers:
+  - url: https://ukm4je3juj.execute-api.eu-south-2.amazonaws.com
+    description: AWS API Gateway endpoint (replace with your URL)
+paths:
+  /upnest-percentile:
+    post:
+      summary: Calculate weight percentile
+      operationId: calculatePercentile
+      requestBody:
+        description: Input data for percentile calculation
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - weight
+                - height
+                - date_birth
+                - sex
+                - date_measurement
+              properties:
+                weight:
+                  type: number
+                  example: 5.35
+                  description: Baby's weight in kilograms
+                height:
+                  type: number
+                  example: 56
+                  description: Baby's height in centimeters (future use)
+                date_birth:
+                  type: string
+                  format: date
+                  example: "2025-03-25"
+                  description: Date of birth (YYYY-MM-DD)
+                sex:
+                  type: string
+                  enum: [male, female]
+                  example: "female"
+                  description: Sex of the baby
+                date_measurement:
+                  type: string
+                  format: date
+                  example: "2025-06-22"
+                  description: Date of the measurement (YYYY-MM-DD)
+      responses:
+        '200':
+          description: Successful percentile calculation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  percentile:
+                    type: number
+                    example: 42.3
+                    description: Calculated percentile for weight
+                  zscore:
+                    type: number
+                    example: -0.7
+                    description: Z-score for weight
+                  LMS:
+                    type: object
+                    properties:
+                      L:
+                        type: number
+                        example: 0.044
+                      M:
+                        type: number
+                        example: 5.7969
+                      S:
+                        type: number
+                        example: 0.12641
+                  success:
+                    type: boolean
+                    example: true
+        '400':
+          description: Invalid input data
+        '500':
+          description: Internal server error
+```
 
 ## License
 
