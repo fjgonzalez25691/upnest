@@ -1,3 +1,4 @@
+import json
 import os
 import math
 import pandas as pd
@@ -35,11 +36,17 @@ def lambda_handler(event, context):
       - sex ('male' or 'female')
     """
     try:
-        # Basic validation
-        weight = float(event.get('weight'))
-        date_birth = event.get('date_birth')
-        date_measurement = event.get('date_measurement')
-        sex = event.get('sex')
+        # Parse event body if it's a string (API Gateway)
+        if isinstance(event.get("body"), str):
+            body = json.loads(event["body"])
+        else:
+            body = event
+            
+        # Basic validation   
+        weight = float(body.get('weight'))
+        date_birth = body.get('date_birth')
+        date_measurement = body.get('date_measurement')
+        sex = body.get('sex')
         if not all([weight, date_birth, date_measurement, sex]):
             raise ValueError("Missing one or more required fields")
         if sex not in ("male", "female"):

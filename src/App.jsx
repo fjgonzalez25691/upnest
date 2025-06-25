@@ -12,6 +12,7 @@ import BabyProfile from "./pages/BabyProfile";
 import GrowthChart from "./pages/GrowthChart";
 import AIChat from "./pages/AIChat";
 import Settings from "./pages/Settings";
+import TestApiConnection from "./services/TestApiConnection"; // For testing API connection
 
 // Components
 import Header from "./components/Header";
@@ -41,6 +42,8 @@ function App() {
             <Route path="/growth-chart/:babyId" element={<GrowthChart />} />
             <Route path="/ai-chat" element={<AIChat />} />
             <Route path="/settings" element={<Settings />} />
+            <Route path="/test-api" element={<TestApiConnection />} /> {/* For testing API connection */}
+
             {/* Add more routes as needed */}
           </Routes>
         </main>
