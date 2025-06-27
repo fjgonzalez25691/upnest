@@ -3,6 +3,7 @@ import os
 import math
 import pandas as pd
 from scipy.stats import norm
+from jwt_validator import require_jwt_auth
 
 data_dir = os.path.join(os.path.dirname(__file__), 'data')
 
@@ -27,6 +28,7 @@ def calculate_zscore(value, L, M, S):
 def zscore_to_percentile(z):
     return norm.cdf(z) * 100
 
+@require_jwt_auth
 def lambda_handler(event, context):
     """
     Lambda handler to compute weight percentile from OMS tables.
@@ -69,16 +71,35 @@ def lambda_handler(event, context):
         percentile = round(zscore_to_percentile(zscore), 2)
 
         return {
-            "input": event,
-            "percentile": percentile,
-            "zscore": zscore,
-            "LMS": {"L": L, "M": M, "S": S},
-            "success": True
+            "statusCode": 200,
+            "headers": {
+                "Content-Type": "application/json",
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Headers": "Content-Type,Authorization",
+                "Access-Control-Allow-Methods": "GET,POST,PUT,DELETE,OPTIONS"
+            },
+            "body": json.dumps({
+                "input": body,
+                "percentile": percentile,
+                "zscore": zscore,
+                "LMS": {"L": L, "M": M, "S": S},
+                "user_id": event.get('user', {}).get('sub'),
+                "success": True
+            })
         }
     except Exception as e:
         return {
-            "input": event,
-            "error": str(e),
-            "success": False
+            "statusCode": 400,
+            "headers": {
+                "Content-Type": "application/json",
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Headers": "Content-Type,Authorization",
+                "Access-Control-Allow-Methods": "GET,POST,PUT,DELETE,OPTIONS"
+            },
+            "body": json.dumps({
+                "input": body if 'body' in locals() else event,
+                "error": str(e),
+                "success": False
+            })
         }
 

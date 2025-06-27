@@ -9,7 +9,7 @@ export const cognitoConfig = {
   client_id: '75g0r5a7bbp1mgpmqrg3e1iibm',
   
   // Redirect URIs
-  redirect_uri: `${window.location.origin}/callback`,
+  redirect_uri: `${window.location.origin}`,
   post_logout_redirect_uri: `${window.location.origin}`,
   silent_redirect_uri: `${window.location.origin}/callback`,
   

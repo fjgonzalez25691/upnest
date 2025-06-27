@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { Routes, Route } from "react-router-dom";
 import { useAuth } from "react-oidc-context";
+import { setAuthContext } from "./services/axiosClient";
 
 // Pages
 import Landing from "./pages/Landing";
@@ -25,6 +26,9 @@ function App() {
 
   // Redirect handling for authentication flow
   useEffect(() => {
+    // Configure axios with auth context
+    setAuthContext(auth);
+    
     // No automatic redirect - let users navigate freely
     // Only redirect to dashboard after successful login
     if (auth.isAuthenticated && window.location.pathname === '/callback') {
