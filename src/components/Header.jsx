@@ -1,13 +1,31 @@
 // .src/components/Header.jsx
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { useAuth } from "react-oidc-context";
+import { cognitoConfig } from "../auth/cognitoConfig.js";
 
 function Header() {
-  const [user, setUser] = useState({ username: "Fran" }); // Simulado; cámbialo por null para probar sin loguear
+  const auth = useAuth();
   const [menuOpen, setMenuOpen] = useState(false);
 
-  const handleLoginClick = () => setUser({ username: "Fran" });
-  const handleLogout = () => setUser(null);
+  const handleLoginClick = () => {
+    auth.signinRedirect();
+  };
+
+  auth.signoutRedirect= (async () => {
+    const clientId = cognitoConfig.client_id;   
+    const logoutUri = cognitoConfig.post_logout_redirect_uri;
+    const cognitoDomain = cognitoConfig.cognitoDomain;
+    const logoutUrl = `${cognitoDomain}/logout?client_id=${clientId}&logout_uri=${encodeURIComponent(logoutUri)}`;
+    console.log("Redirecting to logout URL:", logoutUrl);
+    window.location.href = logoutUrl;
+  });
+
+  const handleLogout = () => {
+    auth.signoutRedirect();
+  };
+
+  const user = auth.user;
 
   return (
     <header className="bg-white shadow px-4 py-3 sticky top-0 z-50">
@@ -23,7 +41,7 @@ function Header() {
           {user ? (
             <>
               <div className="bg-primary text-white rounded-full w-9 h-9 flex items-center justify-center font-bold text-lg">
-                {user.username[0]?.toUpperCase()}
+                {user.profile?.name?.[0]?.toUpperCase() || user.profile?.email?.[0]?.toUpperCase() || 'U'}
               </div>
               <button
                 className="bg-gray-200 text-primary px-3 py-1 rounded hover:bg-gray-300"
@@ -63,7 +81,7 @@ function Header() {
           {user ? (
             <>
               <div className="bg-primary text-white rounded-full w-9 h-9 flex items-center justify-center font-bold text-lg">
-                {user.username[0]?.toUpperCase()}
+                {user.profile?.name?.[0]?.toUpperCase() || user.profile?.email?.[0]?.toUpperCase() || 'U'}
               </div>
               <button
                 className="bg-gray-200 text-primary px-3 py-1 rounded hover:bg-gray-300"

@@ -10,8 +10,8 @@ export const cognitoConfig = {
   
   // Redirect URIs
   redirect_uri: `${window.location.origin}/callback`,
-  post_logout_redirect_uri: `${window.location.origin}/`,
-  silent_redirect_uri: `${window.location.origin}/silent-renew`,
+  post_logout_redirect_uri: `${window.location.origin}`,
+  silent_redirect_uri: `${window.location.origin}/callback`,
   
   // OAuth configuration
   response_type: 'code',

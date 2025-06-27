@@ -1,7 +1,6 @@
 import { useEffect } from "react";
 import { Routes, Route } from "react-router-dom";
 import { useAuth } from "react-oidc-context";
-import { cognitoConfig } from "./auth/cognitoConfig.js";
 
 // Pages
 import Landing from "./pages/Landing";
@@ -14,6 +13,7 @@ import BabyProfile from "./pages/BabyProfile";
 import GrowthChart from "./pages/GrowthChart";
 import AIChat from "./pages/AIChat";
 import Settings from "./pages/Settings";
+import AuthCallback from "./pages/AuthCallback";
 import TestApiConnection from "./services/TestApiConnection"; // For testing API connection
 
 // Components
@@ -23,22 +23,12 @@ import Footer from "./components/Footer";
 function App() {
   const auth = useAuth();
 
-  const signOutRedirect = () => {
-    const clientId = cognitoConfig.client_id;
-    const logoutUri = cognitoConfig.post_logout_redirect_uri;
-    const cognitoDomain = cognitoConfig.cognitoDomain;
-    
-    // Clear user data
-    auth.removeUser();
-    
-    // Redirect to Cognito logout endpoint
-    window.location.href = `${cognitoDomain}/logout?client_id=${clientId}&logout_uri=${encodeURIComponent(logoutUri)}`;
-  };
-
-  // Redirect if not authenticated and not loading
+  // Redirect handling for authentication flow
   useEffect(() => {
-    if (!auth.isAuthenticated && !auth.isLoading) {
-      auth.signinRedirect();
+    // No automatic redirect - let users navigate freely
+    // Only redirect to dashboard after successful login
+    if (auth.isAuthenticated && window.location.pathname === '/callback') {
+      // This is handled in AuthCallback component
     }
   }, [auth.isAuthenticated, auth.isLoading, auth]);
 
@@ -50,17 +40,14 @@ function App() {
     return <div className="flex items-center justify-center min-h-screen">Error: {auth.error.message}</div>;
   }
 
-  // Prevent rendering the app while redirecting
-  if (!auth.isAuthenticated && !auth.isLoading) {
-    return null;
-  }
-
+  // Don't prevent rendering - let users navigate freely
   return (
     <div className="min-h-screen flex flex-col">
-      <Header user={auth.user} onLoginClick={auth.signinRedirect} onLogout={signOutRedirect} />
+      <Header />
       <main className="flex-1 flex justify-center items-center bg-background ">
         <Routes>
-          <Route path="/" element={<Landing auth={auth} />} />
+          <Route path="/" element={<Landing />} />
+          <Route path="/callback" element={<AuthCallback />} />
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
           <Route path="/dashboard" element={<Dashboard />} />
