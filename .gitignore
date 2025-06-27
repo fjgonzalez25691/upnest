@@ -63,3 +63,6 @@ coverage.xml
 
 # OS files
 Thumbs.db
+
+# Miscellaneous
+COGNITO_SETUP.md

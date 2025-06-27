@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Silent Renew</title>
+</head>
+<body>
+    <script type="module">
+        import { UserManager } from 'https://unpkg.com/oidc-client-ts@2.4.0/dist/browser/oidc-client-ts.min.js';
+        
+        const userManager = new UserManager({
+            authority: 'https://cognito-idp.eu-south-2.amazonaws.com/eu-south-2_WInbcDDjo',
+            client_id: '75g0r5a7bbp1mgpmqrg3e1iibm',
+            redirect_uri: `${window.location.origin}/callback.html`,
+            silent_redirect_uri: `${window.location.origin}/silent-renew.html`,
+            response_type: 'code',
+            scope: 'email openid profile',
+            metadata: {
+                issuer: 'https://cognito-idp.eu-south-2.amazonaws.com/eu-south-2_WInbcDDjo',
+                authorization_endpoint: 'https://eu-south-2winbcddjo.auth.eu-south-2.amazoncognito.com/oauth2/authorize',
+                token_endpoint: 'https://eu-south-2winbcddjo.auth.eu-south-2.amazoncognito.com/oauth2/token',
+                userinfo_endpoint: 'https://eu-south-2winbcddjo.auth.eu-south-2.amazoncognito.com/oauth2/userInfo',
+                end_session_endpoint: 'https://eu-south-2winbcddjo.auth.eu-south-2.amazoncognito.com/logout',
+                jwks_uri: 'https://cognito-idp.eu-south-2.amazonaws.com/eu-south-2_WInbcDDjo/.well-known/jwks.json'
+            }
+        });
+
+        userManager.signinSilentCallback().catch((error) => {
+            console.error('Silent renew error:', error);
+        });
+    </script>
+</body>
+</html>
