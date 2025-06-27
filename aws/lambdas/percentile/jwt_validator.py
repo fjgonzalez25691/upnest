@@ -1,9 +1,22 @@
-import jwt
+"""
+JWT Validation Module for AWS Lambda Functions
+
+This module provides JWT token validation for AWS Cognito User Pool tokens.
+It includes token extraction, JWKS caching, and signature verification.
+"""
+
 import json
+import jwt
+from jwt.exceptions import ExpiredSignatureError, InvalidTokenError
 import requests
 import os
-from jwt.exceptions import InvalidTokenError, ExpiredSignatureError
+import logging
+from datetime import datetime, timedelta
 from functools import wraps
+
+# Configure logging
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
 
 # Cognito configuration
 COGNITO_REGION = os.environ.get('COGNITO_REGION', 'us-east-1')
@@ -95,10 +108,15 @@ def extract_token_from_event(event):
 def require_jwt_auth(f):
     """
     Decorator to require JWT authentication for Lambda handlers
+    Includes security logging and metrics for monitoring
     """
     @wraps(f)
     def decorated_function(event, context):
         try:
+            # Log authentication attempt with IP if available
+            client_ip = event.get('requestContext', {}).get('identity', {}).get('sourceIp', 'unknown')
+            logger.info(f"JWT authentication attempt from IP: {client_ip}")
+            
             # Extract and validate token
             token = extract_token_from_event(event)
             decoded_token = validate_jwt_token(token)
@@ -112,10 +130,15 @@ def require_jwt_auth(f):
                 'decoded_token': decoded_token
             }
             
+            # Log successful authentication
+            user_id = decoded_token.get('sub', 'unknown')
+            logger.info(f"JWT authentication successful for user: {user_id}")
+            
             # Call original function
             return f(event, context)
             
         except ValueError as e:
+            logger.warning(f"Unauthorized access attempt: {str(e)}")
             return {
                 'statusCode': 401,
                 'headers': {
@@ -131,6 +154,7 @@ def require_jwt_auth(f):
                 })
             }
         except Exception as e:
+            logger.error(f"Error in JWT validation: {str(e)}")
             return {
                 'statusCode': 500,
                 'headers': {

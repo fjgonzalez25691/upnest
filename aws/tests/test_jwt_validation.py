@@ -90,6 +90,7 @@ class TestJWTValidator(unittest.TestCase):
                 }
             ]
         }
+        mock_response.raise_for_status.return_value = None
         mock_get.return_value = mock_response
         
         # Clear cache
@@ -100,8 +101,9 @@ class TestJWTValidator(unittest.TestCase):
         self.assertIn('keys', jwks)
         self.assertEqual(jwks['keys'][0]['kid'], 'test-key-id')
 
+    @patch('aws.lambdas.percentile.jwt_validator.requests.get')
     @patch('aws.lambdas.percentile.jwt_validator.get_jwks')
-    def test_find_jwk_by_kid_success(self, mock_get_jwks):
+    def test_find_jwk_by_kid_success(self, mock_get_jwks, mock_requests_get):
         """Test successful JWK lookup by kid"""
         mock_get_jwks.return_value = {
             'keys': [
@@ -121,8 +123,9 @@ class TestJWTValidator(unittest.TestCase):
         jwk = find_jwk_by_kid('key2')
         self.assertEqual(jwk['kid'], 'key2')
 
+    @patch('aws.lambdas.percentile.jwt_validator.requests.get')
     @patch('aws.lambdas.percentile.jwt_validator.get_jwks')
-    def test_find_jwk_by_kid_not_found(self, mock_get_jwks):
+    def test_find_jwk_by_kid_not_found(self, mock_get_jwks, mock_requests_get):
         """Test JWK lookup when kid is not found"""
         mock_get_jwks.return_value = {
             'keys': [
@@ -160,13 +163,14 @@ class TestJWTValidator(unittest.TestCase):
         self.assertEqual(body['error'], 'Unauthorized')
         self.assertIn('Missing Authorization header', body['message'])
 
+    @patch('aws.lambdas.percentile.jwt_validator.requests.get')
     @patch.dict(os.environ, {
         'COGNITO_USER_POOL_ID': 'test-pool-id',
         'COGNITO_CLIENT_ID': 'test-client-id', 
         'COGNITO_REGION': 'us-east-1'
     })
     @patch('aws.lambdas.percentile.jwt_validator.validate_jwt_token')
-    def test_require_jwt_auth_decorator_success(self, mock_validate):
+    def test_require_jwt_auth_decorator_success(self, mock_validate, mock_requests_get):
         """Test decorator allows access with valid token"""
         
         # Mock successful token validation

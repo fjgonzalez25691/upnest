@@ -12,7 +12,15 @@ lambda_dir = os.path.join(os.path.dirname(__file__), '..', 'lambdas', 'percentil
 sys.path.insert(0, lambda_dir)
 
 # Direct import from the lambda directory  
-import lambda_function
+try:
+    import aws.lambdas.percentile.lambda_function as lambda_func
+except ImportError:
+    # Fallback import method
+    import importlib.util
+    spec = importlib.util.spec_from_file_location("lambda_function", 
+                                                  os.path.join(lambda_dir, "lambda_function.py"))
+    lambda_func = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(lambda_func)
 
 def test_lambda_without_auth():
     """Test Lambda without Authorization header"""
@@ -29,7 +37,7 @@ def test_lambda_without_auth():
     }
     context = {}
     
-    response = lambda_function.lambda_handler(event, context)
+    response = lambda_func.lambda_handler(event, context)
     print(f"Status Code: {response['statusCode']}")
     print(f"Response: {response['body']}")
     print()
@@ -53,7 +61,7 @@ def test_lambda_with_invalid_token():
     }
     context = {}
     
-    response = lambda_function.lambda_handler(event, context)
+    response = lambda_func.lambda_handler(event, context)
     print(f"Status Code: {response['statusCode']}")
     print(f"Response: {response['body']}")
     print()
@@ -84,7 +92,7 @@ def test_lambda_with_mock_valid_token():
     context = {}
     
     try:
-        response = lambda_function.lambda_handler(event, context)
+        response = lambda_func.lambda_handler(event, context)
         print(f"Status Code: {response['statusCode']}")
         print(f"Response: {response['body']}")
         print()

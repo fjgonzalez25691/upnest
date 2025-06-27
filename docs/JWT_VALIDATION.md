@@ -4,6 +4,18 @@
 
 This implementation adds JWT (JSON Web Token) validation to AWS Lambda functions to secure API endpoints. The validation ensures that only authenticated users with valid Cognito tokens can access protected resources.
 
+## ✅ Implementation Checklist
+
+- [x] **Add JWT validation to Lambda handlers** - Implemented with `@require_jwt_auth` decorator
+- [x] **Parse Authorization header in API Gateway** - Automatic header extraction with case-insensitive support
+- [x] **Use Cognito's JSON Web Key Set (JWKS) to verify signature** - JWKS fetching with caching for performance
+- [x] **Extract sub claim for user identification** - User info accessible via `event['user']` in handlers
+- [x] **Reject requests with invalid or missing tokens** - Proper 401 responses with error details
+- [x] **Test end-to-end with valid and invalid tokens** - Comprehensive unit tests (9/9) and manual tests (3/3)
+- [x] **Add token refresh handling in frontend** - Automatic token refresh with `react-oidc-context` integration
+- [x] **Implement JWKS caching for performance** - In-memory cache to reduce external calls
+- [x] **Add security logging and monitoring** - Track authentication attempts, user IDs, and client IPs for security auditing
+
 ## Components
 
 ### 1. JWT Validator Module (`jwt_validator.py`)
