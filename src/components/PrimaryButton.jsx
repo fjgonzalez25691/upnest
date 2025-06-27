@@ -13,20 +13,23 @@ const variantStyles = {
   danger:
     "[background:var(--color-danger)] text-white " +
     "hover:[background:color-mix(in_srgb,var(--color-danger)80%,black_20%)]",
+  default:
+    "[background:var(--color-primary)] text-white " +
+    "hover:[background:color-mix(in_srgb,var(--color-primary)80%,black_20%)]",
 };
 ;
 
 
 const PrimaryButton = ({
   children,
-  variant = "save",
+  variant = "default",
   className = "",
   ...props
 }) => (
   <button
     type={props.type || "button"}
     className={
-      `flex-1 rounded-lg px-4 py-2 font-semibold transition ${variantStyles[variant] || ""} ${className}`
+      `rounded-lg px-4 py-2 font-semibold transition disabled:opacity-50 disabled:cursor-not-allowed ${variantStyles[variant] || variantStyles.default} ${className}`
     }
     {...props}
   >

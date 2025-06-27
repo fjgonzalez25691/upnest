@@ -6,7 +6,7 @@ import InputField from "./InputField";
 import PrimaryButton from "./PrimaryButton";
 
 const GrowthDataForm = ({ values, onChange, onSubmit, onCancel }) => (
-  <form className="bg-surface p-3 rounded-2xl shadow-md w-full max-w-md mx-auto" onSubmit={onSubmit}>
+  <form className="bg-surface p-6 rounded-2xl shadow-md w-full max-w-xl mx-auto" onSubmit={onSubmit}>
     <h2 className="text-xl font-bold mb-4 text-primary">Add Growth Data</h2>
     <InputField
       label="Weight (kg)"
@@ -49,11 +49,20 @@ const GrowthDataForm = ({ values, onChange, onSubmit, onCancel }) => (
       onChange={onChange}
       required
     />
-    <div className="flex flex-col sm:flex-row gap-2 mt-4">
-      <PrimaryButton type="button" variant="save" className="w-full mb-2" onClick={onSubmit}>
-        Save
+    <div className="flex flex-col-reverse sm:flex-row gap-3 mt-6">
+      <PrimaryButton 
+        type="submit" 
+        variant="save"
+        className="flex-1"
+      >
+        Save Growth Data
       </PrimaryButton>
-      <PrimaryButton type="button" variant="cancel" className="w-full mb-2" onClick={onCancel}>
+      <PrimaryButton 
+        type="button"
+        onClick={onCancel}
+        variant="cancel"
+        className="flex-1"
+      >
         Cancel
       </PrimaryButton>
     </div>

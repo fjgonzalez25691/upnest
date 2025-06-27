@@ -3,8 +3,8 @@ import InputField from "./InputField";
 import PrimaryButton from "./PrimaryButton";
 import SelectField from "./SelectField";
 
-const AddBabyForm = ({ values, onChange, onSubmit }) => (
-  <form className="bg-surface p-6 rounded-2xl shadow-md max-w-sm mx-auto" onSubmit={onSubmit}>
+const AddBabyForm = ({ values, onChange, onSubmit, onCancel, isSubmitting = false }) => (
+  <form className="bg-surface p-6 rounded-2xl shadow-md max-w-xl w-full mx-auto" onSubmit={onSubmit}>
     <h2 className="text-xl font-bold mb-4 text-primary">Register Baby</h2>
     <InputField
       label="Name"
@@ -58,9 +58,25 @@ const AddBabyForm = ({ values, onChange, onSubmit }) => (
         placeholder="e.g. 34"
       />
     )}
-    <PrimaryButton type="submit" className="w-full mt-4">
-      Save Baby
-    </PrimaryButton>
+    <div className="flex flex-col-reverse sm:flex-row gap-3 mt-6">
+      <PrimaryButton 
+        type="submit" 
+        variant="save"
+        className="flex-1" 
+        disabled={isSubmitting}
+      >
+        {isSubmitting ? "Saving..." : "Save Baby"}
+      </PrimaryButton>
+      <PrimaryButton 
+        type="button"
+        onClick={onCancel}
+        variant="cancel"
+        className="flex-1"
+        disabled={isSubmitting}
+      >
+        Cancel
+      </PrimaryButton>
+    </div>
   </form>
 );
 

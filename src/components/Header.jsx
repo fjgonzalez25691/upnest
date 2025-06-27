@@ -36,11 +36,11 @@ function Header() {
 
         {/* Desktop nav */}
         <nav className="hidden md:flex gap-4 items-center">
-          <Link to="/dashboard" className="hover:text-primary">Dashboard</Link>
-          <Link to="/add-baby" className="hover:text-primary">Add Baby</Link>
           <Link to="/ai-chat" className="hover:text-primary">AI Chat</Link>
           {user ? (
             <>
+              <Link to="/dashboard" className="hover:text-primary">My Dashboard</Link>
+              <Link to="/add-baby" className="hover:text-primary">Add Baby</Link>
               <div className="bg-primary text-white rounded-full w-9 h-9 flex items-center justify-center font-bold text-lg">
                 {user.profile?.name?.[0]?.toUpperCase() || user.profile?.email?.[0]?.toUpperCase() || 'U'}
               </div>
@@ -76,11 +76,11 @@ function Header() {
       {/* Mobile menu (dropdown) */}
       {menuOpen && (
         <nav className="md:hidden bg-white shadow rounded-b-lg px-4 py-3 flex flex-col gap-3 max-w-5xl mx-auto">
-          <Link to="/dashboard" className="hover:text-primary" onClick={() => setMenuOpen(false)}>Dashboard</Link>
-          <Link to="/add-baby" className="hover:text-primary" onClick={() => setMenuOpen(false)}>Add Baby</Link>
           <Link to="/ai-chat" className="hover:text-primary" onClick={() => setMenuOpen(false)}>AI Chat</Link>
           {user ? (
             <>
+              <Link to="/dashboard" className="hover:text-primary" onClick={() => setMenuOpen(false)}>My Dashboard</Link>
+              <Link to="/add-baby" className="hover:text-primary" onClick={() => setMenuOpen(false)}>Add Baby</Link>
               <div className="bg-primary text-white rounded-full w-9 h-9 flex items-center justify-center font-bold text-lg">
                 {user.profile?.name?.[0]?.toUpperCase() || user.profile?.email?.[0]?.toUpperCase() || 'U'}
               </div>

@@ -10,7 +10,18 @@ const AuthCallback = () => {
 
   useEffect(() => {
     if (auth.isAuthenticated) {
-      navigate('/dashboard');
+      // Check if there's a stored redirect path
+      const redirectPath = sessionStorage.getItem('redirectAfterLogin');
+      
+      if (redirectPath) {
+        // Clear the stored path
+        sessionStorage.removeItem('redirectAfterLogin');
+        // Navigate to the originally requested path
+        navigate(redirectPath);
+      } else {
+        // Default to dashboard if no redirect path
+        navigate('/dashboard');
+      }
     }
   }, [auth.isAuthenticated, navigate]);
 

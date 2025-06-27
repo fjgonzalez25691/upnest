@@ -1,23 +1,114 @@
 // src/pages/Dashboard.jsx
-// Dashboard component displaying user information and token details for development
-import React from "react";
-import { useAuth } from "react-oidc-context";
-import { Navigate } from "react-router-dom";
+// Dashboard component displaying user information and babies list
+import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import { useCurrentUser } from "../hooks/useCurrentUser";
+import { getBabies } from "../services/babyApi";
+import PrimaryButton from "../components/PrimaryButton";
 
 const Dashboard = () => {
-  const auth = useAuth();
+  const { user, userId, email, name } = useCurrentUser();
+  const [babies, setBabies] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
-  // Redirect to landing page if user is not authenticated
-  if (!auth.isAuthenticated) {
-    return <Navigate to="/" replace />;
-  }
+  // Fetch user's babies on component mount
+  useEffect(() => {
+    const fetchBabies = async () => {
+      try {
+        setLoading(true);
+        const babiesData = await getBabies();
+        setBabies(babiesData);
+      } catch (err) {
+        console.error("Error fetching babies:", err);
+        setError("Failed to load babies. Please try again.");
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  const user = auth.user;
+    if (userId) {
+      fetchBabies();
+    }
+  }, [userId]);
 
+  // The ProtectedRoute component handles authentication redirect
+  // So we can assume user is authenticated here
+  
   return (
     <div className="min-h-screen bg-background p-6">
       <div className="max-w-4xl mx-auto">
-        <h1 className="text-3xl font-bold text-primary mb-8">Dashboard</h1>
+        <h1 className="text-3xl font-bold text-primary mb-8">My Dashboard</h1>
+        
+        {/* Welcome message */}
+        <div className="bg-primary/10 border border-primary/20 rounded-2xl p-6 mb-6">
+          <h2 className="text-xl font-semibold text-primary mb-2">
+            Welcome back, {name || 'Parent'}! 👋
+          </h2>
+          <p className="text-gray-600">
+            Here you can manage your babies' growth data and track their development.
+          </p>
+        </div>
+
+        {/* My Babies Section */}
+        <div className="mb-8">
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-2xl font-bold text-primary">My Babies</h2>
+            <Link to="/add-baby">
+              <PrimaryButton>Add New Baby</PrimaryButton>
+            </Link>
+          </div>
+
+          {loading ? (
+            <div className="bg-surface p-6 rounded-2xl shadow-md text-center">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
+              <p className="text-gray-600">Loading babies...</p>
+            </div>
+          ) : error ? (
+            <div className="bg-red-50 border border-red-200 rounded-2xl p-6">
+              <p className="text-red-600">{error}</p>
+            </div>
+          ) : babies.length === 0 ? (
+            <div className="bg-surface p-6 rounded-2xl shadow-md text-center">
+              <p className="text-gray-600 mb-4">You haven't added any babies yet.</p>
+              <Link to="/add-baby">
+                <PrimaryButton>Add Your First Baby</PrimaryButton>
+              </Link>
+            </div>
+          ) : (
+            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+              {babies.map((baby) => (
+                <div key={baby.id} className="bg-surface p-6 rounded-2xl shadow-md hover:shadow-lg transition-shadow">
+                  <h3 className="text-xl font-semibold text-primary mb-2">{baby.name}</h3>
+                  <p className="text-gray-600 mb-1">
+                    <strong>Born:</strong> {new Date(baby.dob).toLocaleDateString()}
+                  </p>
+                  <p className="text-gray-600 mb-1">
+                    <strong>Sex:</strong> {baby.sex}
+                  </p>
+                  {baby.premature && (
+                    <p className="text-gray-600 mb-1">
+                      <strong>Premature:</strong> {baby.gestationalWeek} weeks
+                    </p>
+                  )}
+                  
+                  <div className="flex gap-2 mt-4">
+                    <Link to={`/baby/${baby.id}`} className="flex-1">
+                      <button className="w-full bg-primary text-white px-3 py-2 rounded text-sm hover:bg-primary/90">
+                        View Profile
+                      </button>
+                    </Link>
+                    <Link to={`/add-growth-data/${baby.id}`} className="flex-1">
+                      <button className="w-full bg-green-500 text-white px-3 py-2 rounded text-sm hover:bg-green-600">
+                        Add Data
+                      </button>
+                    </Link>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
         
         <div className="grid gap-6 md:grid-cols-2">
           {/* User Info Card */}
@@ -26,15 +117,15 @@ const Dashboard = () => {
             <div className="space-y-3">
               <div>
                 <span className="font-medium text-gray-700">Name:</span>
-                <span className="ml-2 text-gray-900">{user?.profile?.name || 'Not provided'}</span>
+                <span className="ml-2 text-gray-900">{name || 'Not provided'}</span>
               </div>
               <div>
                 <span className="font-medium text-gray-700">Email:</span>
-                <span className="ml-2 text-gray-900">{user?.profile?.email || 'Not provided'}</span>
+                <span className="ml-2 text-gray-900">{email || 'Not provided'}</span>
               </div>
               <div>
                 <span className="font-medium text-gray-700">User ID:</span>
-                <span className="ml-2 text-gray-900 text-sm break-all">{user?.profile?.sub || 'Not provided'}</span>
+                <span className="ml-2 text-gray-900 text-sm break-all">{userId || 'Not provided'}</span>
               </div>
               <div>
                 <span className="font-medium text-gray-700">Email Verified:</span>

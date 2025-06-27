@@ -20,6 +20,7 @@ import TestApiConnection from "./services/TestApiConnection"; // For testing API
 // Components
 import Header from "./components/Header";
 import Footer from "./components/Footer";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
   const auth = useAuth();
@@ -48,20 +49,46 @@ function App() {
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
-      <main className="flex-1 flex justify-center items-center bg-background ">
+      <main className="flex-1 bg-background">
         <Routes>
           <Route path="/" element={<Landing />} />
           <Route path="/callback" element={<AuthCallback />} />
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/add-baby" element={<AddBaby />} />
-          <Route path="/add-growth-data/:babyId" element={<AddGrowthData />} />
-          <Route path="/baby/:babyId" element={<BabyProfile />} />
-          <Route path="/growth-chart/:babyId" element={<GrowthChart />} />
           <Route path="/ai-chat" element={<AIChat />} />
-          <Route path="/settings" element={<Settings />} />
           <Route path="/test-api" element={<TestApiConnection />} />
+          
+          {/* Protected Routes */}
+          <Route path="/dashboard" element={
+            <ProtectedRoute>
+              <Dashboard />
+            </ProtectedRoute>
+          } />
+          <Route path="/add-baby" element={
+            <ProtectedRoute>
+              <AddBaby />
+            </ProtectedRoute>
+          } />
+          <Route path="/add-growth-data/:babyId" element={
+            <ProtectedRoute>
+              <AddGrowthData />
+            </ProtectedRoute>
+          } />
+          <Route path="/baby/:babyId" element={
+            <ProtectedRoute>
+              <BabyProfile />
+            </ProtectedRoute>
+          } />
+          <Route path="/growth-chart/:babyId" element={
+            <ProtectedRoute>
+              <GrowthChart />
+            </ProtectedRoute>
+          } />
+          <Route path="/settings" element={
+            <ProtectedRoute>
+              <Settings />
+            </ProtectedRoute>
+          } />
         </Routes>
       </main>
       <Footer />
