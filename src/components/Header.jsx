@@ -12,17 +12,18 @@ function Header() {
     auth.signinRedirect();
   };
 
-  auth.signoutRedirect= (async () => {
-    const clientId = cognitoConfig.client_id;   
+  const signOutRedirect = () => {
+    const clientId = cognitoConfig.client_id;
     const logoutUri = cognitoConfig.post_logout_redirect_uri;
     const cognitoDomain = cognitoConfig.cognitoDomain;
     const logoutUrl = `${cognitoDomain}/logout?client_id=${clientId}&logout_uri=${encodeURIComponent(logoutUri)}`;
-    console.log("Redirecting to logout URL:", logoutUrl);
+  
     window.location.href = logoutUrl;
-  });
+  };
 
   const handleLogout = () => {
-    auth.signoutRedirect();
+    signOutRedirect();
+    auth.removeUser();
   };
 
   const user = auth.user;

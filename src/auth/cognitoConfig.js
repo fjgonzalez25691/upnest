@@ -1,5 +1,5 @@
 // AWS Cognito configuration for React
-// Based on working vanilla JS configuration
+
 
 export const cognitoConfig = {
   // Authority using the Cognito Identity Provider
