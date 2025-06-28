@@ -522,3 +522,95 @@ aws cloudformation deploy \
 - **User Activity Logs**: 90-day retention
 - **Deleted Records**: Soft delete with 30-day recovery window
 - **Inactive Users**: Archive after 365 days of inactivity
+
+---
+
+## 🚀 Deployed AWS Resources
+
+### CloudFormation Stack Information
+- **Stack Name**: `UpNest-DynamoDB-dev`
+- **Region**: `eu-south-2`
+- **Status**: `CREATE_COMPLETE`
+- **Deployment Date**: `2025-06-28T15:15:11.454Z`
+
+### DynamoDB Tables (Production Ready)
+
+#### Users Table
+- **Table Name**: `UpNest-Users-dev`
+- **ARN**: `arn:aws:dynamodb:eu-south-2:568680248062:table/UpNest-Users-dev`
+- **Primary Key**: `userId` (String)
+- **Global Secondary Indexes**:
+  - `EmailIndex`: `email` (HASH) - Status: ACTIVE
+- **Features**: Point-in-Time Recovery ✅, SSE ✅, Streams ✅
+
+#### Babies Table
+- **Table Name**: `UpNest-Babies-dev`
+- **ARN**: `arn:aws:dynamodb:eu-south-2:568680248062:table/UpNest-Babies-dev`
+- **Primary Key**: `babyId` (String)
+- **Global Secondary Indexes**:
+  - `UserBabiesIndex`: `userId` (HASH), `dateOfBirth` (RANGE) - Status: ACTIVE
+  - `ActiveBabiesIndex`: `userId` (HASH), `isActive` (RANGE) - Status: ACTIVE
+- **Features**: Point-in-Time Recovery ✅, SSE ✅, Streams ✅
+
+#### Growth Data Table
+- **Table Name**: `UpNest-GrowthData-dev`
+- **ARN**: `arn:aws:dynamodb:eu-south-2:568680248062:table/UpNest-GrowthData-dev`
+- **Primary Key**: `dataId` (String)
+- **Global Secondary Indexes**:
+  - `BabyGrowthIndex`: `babyId` (HASH), `measurementDate` (RANGE) - Status: ACTIVE
+  - `UserGrowthDataIndex`: `userId` (HASH), `measurementDate` (RANGE) - Status: ACTIVE
+  - `BabyMeasurementTypeIndex`: `babyId` (HASH), `measurementType` (RANGE) - Status: ACTIVE
+- **Features**: Point-in-Time Recovery ✅, SSE ✅, Streams ✅
+
+#### Vaccinations Table
+- **Table Name**: `UpNest-Vaccinations-dev`
+- **ARN**: `arn:aws:dynamodb:eu-south-2:568680248062:table/UpNest-Vaccinations-dev`
+- **Primary Key**: `vaccinationId` (String)
+- **Global Secondary Indexes**:
+  - `BabyVaccinationsIndex`: `babyId` (HASH), `dateAdministered` (RANGE) - Status: ACTIVE
+  - `UserVaccinationsIndex`: `userId` (HASH), `dateAdministered` (RANGE) - Status: ACTIVE
+  - `UpcomingVaccinationsIndex`: `babyId` (HASH), `nextDueDate` (RANGE) - Status: ACTIVE
+- **Features**: Point-in-Time Recovery ✅, SSE ✅, Streams ✅
+
+#### Milestones Table
+- **Table Name**: `UpNest-Milestones-dev`
+- **ARN**: `arn:aws:dynamodb:eu-south-2:568680248062:table/UpNest-Milestones-dev`
+- **Primary Key**: `milestoneId` (String)
+- **Global Secondary Indexes**:
+  - `BabyMilestonesIndex`: `babyId` (HASH), `achievedDate` (RANGE) - Status: ACTIVE
+  - `UserMilestonesIndex`: `userId` (HASH), `achievedDate` (RANGE) - Status: ACTIVE
+  - `MilestoneTypeIndex`: `babyId` (HASH), `milestoneType` (RANGE) - Status: ACTIVE
+- **Features**: Point-in-Time Recovery ✅, SSE ✅, Streams ✅
+
+### CloudFormation Exports (For Lambda Integration)
+```bash
+# Table Names
+UpNest-DynamoDB-dev-UsersTable
+UpNest-DynamoDB-dev-BabiesTable
+UpNest-DynamoDB-dev-GrowthDataTable
+UpNest-DynamoDB-dev-VaccinationsTable
+UpNest-DynamoDB-dev-MilestonesTable
+
+# Table ARNs
+UpNest-DynamoDB-dev-UsersTableArn
+UpNest-DynamoDB-dev-BabiesTableArn
+UpNest-DynamoDB-dev-GrowthDataTableArn
+UpNest-DynamoDB-dev-VaccinationsTableArn
+UpNest-DynamoDB-dev-MilestonesTableArn
+
+# Environment & Stack
+UpNest-DynamoDB-dev-Environment
+UpNest-DynamoDB-dev-StackName
+```
+
+### CRUD Testing Status
+✅ **Basic Operations**: All tables tested with CREATE, READ, UPDATE, DELETE
+✅ **User Data Isolation**: Verified users can only access their own data
+✅ **GSI Queries**: All Global Secondary Indexes operational and tested
+✅ **CloudFormation Outputs**: All exports available for Lambda integration
+
+### Next Steps for Lambda Integration
+1. Reference CloudFormation exports in Lambda template
+2. Add DynamoDB permissions to Lambda execution roles
+3. Use table names from exports (not hardcoded values)
+4. Implement error handling for DynamoDB operations

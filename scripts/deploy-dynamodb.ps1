@@ -7,7 +7,7 @@ param(
     [string]$Environment = "dev",
     
     [Parameter(Mandatory=$false)]
-    [string]$Region = "us-east-1",
+    [string]$Region = "eu-south-2",
     
     [Parameter(Mandatory=$false)]
     [string]$StackName = "",
@@ -15,6 +15,9 @@ param(
     [Parameter(Mandatory=$false)]
     [ValidateSet("PAY_PER_REQUEST", "PROVISIONED")]
     [string]$BillingMode = "PAY_PER_REQUEST",
+    
+    [Parameter(Mandatory=$false)]
+    [string]$Profile = "fran-dev",
     
     [Parameter(Mandatory=$false)]
     [switch]$Help
@@ -28,14 +31,15 @@ if ($Help) {
     Write-Host ""
     Write-Host "Parameters:" -ForegroundColor Yellow
     Write-Host "  -Environment ENV      Environment (dev, staging, prod) [default: dev]" -ForegroundColor Gray
-    Write-Host "  -Region REGION        AWS region [default: us-east-1]" -ForegroundColor Gray
+    Write-Host "  -Region REGION        AWS region [default: eu-south-2]" -ForegroundColor Gray
     Write-Host "  -StackName NAME       CloudFormation stack name [default: upnest-dynamodb-ENV]" -ForegroundColor Gray
     Write-Host "  -BillingMode MODE     Billing mode (PAY_PER_REQUEST, PROVISIONED) [default: PAY_PER_REQUEST]" -ForegroundColor Gray
+    Write-Host "  -Profile PROFILE      AWS CLI profile [default: fran-dev]" -ForegroundColor Gray
     Write-Host "  -Help                 Show this help message" -ForegroundColor Gray
     Write-Host ""
     Write-Host "Examples:" -ForegroundColor Yellow
-    Write-Host "  .\deploy-dynamodb.ps1 -Environment dev -Region us-east-1" -ForegroundColor Gray
-    Write-Host "  .\deploy-dynamodb.ps1 -Environment prod -Region us-west-2" -ForegroundColor Gray
+    Write-Host "  .\deploy-dynamodb.ps1 -Environment dev -Region eu-south-2" -ForegroundColor Gray
+    Write-Host "  .\deploy-dynamodb.ps1 -Environment prod -Region eu-west-1" -ForegroundColor Gray
     Write-Host "  .\deploy-dynamodb.ps1 -Environment staging -StackName my-custom-stack-name" -ForegroundColor Gray
     exit 0
 }
@@ -73,23 +77,23 @@ Write-Host "Billing Mode: " -NoNewline -ForegroundColor White
 Write-Host $BillingMode -ForegroundColor Yellow
 Write-Host "Template: " -NoNewline -ForegroundColor White
 Write-Host $TemplateFile -ForegroundColor Yellow
+Write-Host "Profile: " -NoNewline -ForegroundColor White
+Write-Host $Profile -ForegroundColor Yellow
 Write-Host ""
 
 # Check if stack already exists
 Write-Host "Checking if stack exists..." -ForegroundColor Blue
 try {
-    $null = aws cloudformation describe-stacks --stack-name $StackName --region $Region 2>$null
+    $null = aws cloudformation describe-stacks --stack-name $StackName --region $Region --profile $Profile 2>$null
     Write-Host "Stack exists. This will be an update operation." -ForegroundColor Yellow
-    $Operation = "update"
 } catch {
     Write-Host "Stack does not exist. This will be a create operation." -ForegroundColor Green
-    $Operation = "create"
 }
 
 # Validate CloudFormation template
 Write-Host "Validating CloudFormation template..." -ForegroundColor Blue
 try {
-    $null = aws cloudformation validate-template --template-body file://$TemplateFile --region $Region 2>$null
+    $null = aws cloudformation validate-template --template-body file://$TemplateFile --region $Region --profile $Profile 2>$null
     Write-Host "✅ Template is valid" -ForegroundColor Green
 } catch {
     Write-Host "❌ Template validation failed" -ForegroundColor Red
@@ -103,6 +107,7 @@ try {
         --template-file $TemplateFile `
         --stack-name $StackName `
         --region $Region `
+        --profile $Profile `
         --parameter-overrides Environment=$Environment BillingMode=$BillingMode `
         --capabilities CAPABILITY_IAM `
         --no-fail-on-empty-changeset
@@ -115,6 +120,7 @@ try {
         aws cloudformation describe-stacks `
             --stack-name $StackName `
             --region $Region `
+            --profile $Profile `
             --query 'Stacks[0].Outputs[*].[OutputKey,OutputValue]' `
             --output table
             
@@ -148,7 +154,7 @@ $Tables = @(
 
 foreach ($table in $Tables) {
     try {
-        $status = aws dynamodb describe-table --table-name $table --region $Region --query 'Table.TableStatus' --output text 2>$null
+        $status = aws dynamodb describe-table --table-name $table --region $Region --profile $Profile --query 'Table.TableStatus' --output text 2>$null
         if ($status -eq "ACTIVE") {
             Write-Host "  ✅ $table`: $status" -ForegroundColor Green
         } else {

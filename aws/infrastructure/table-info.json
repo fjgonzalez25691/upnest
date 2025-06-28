@@ -1,0 +1,55 @@
+{
+  "environment": "dev",
+  "stackName": "UpNest-DynamoDB-dev",
+  "region": "eu-south-2",
+  "accountId": "568680248062",
+  "tables": {
+    "users": {
+      "tableName": "UpNest-Users-dev",
+      "tableArn": "arn:aws:dynamodb:eu-south-2:568680248062:table/UpNest-Users-dev",
+      "primaryKey": "userId",
+      "globalSecondaryIndexes": ["EmailIndex"]
+    },
+    "babies": {
+      "tableName": "UpNest-Babies-dev",
+      "tableArn": "arn:aws:dynamodb:eu-south-2:568680248062:table/UpNest-Babies-dev",
+      "primaryKey": "babyId",
+      "globalSecondaryIndexes": ["UserBabiesIndex", "ActiveBabiesIndex"]
+    },
+    "growthData": {
+      "tableName": "UpNest-GrowthData-dev",
+      "tableArn": "arn:aws:dynamodb:eu-south-2:568680248062:table/UpNest-GrowthData-dev",
+      "primaryKey": "dataId",
+      "globalSecondaryIndexes": ["BabyGrowthIndex", "UserGrowthDataIndex", "BabyMeasurementTypeIndex"]
+    },
+    "vaccinations": {
+      "tableName": "UpNest-Vaccinations-dev",
+      "tableArn": "arn:aws:dynamodb:eu-south-2:568680248062:table/UpNest-Vaccinations-dev",
+      "primaryKey": "vaccinationId",
+      "globalSecondaryIndexes": ["BabyVaccinationsIndex", "UserVaccinationsIndex", "UpcomingVaccinationsIndex"]
+    },
+    "milestones": {
+      "tableName": "UpNest-Milestones-dev",
+      "tableArn": "arn:aws:dynamodb:eu-south-2:568680248062:table/UpNest-Milestones-dev",
+      "primaryKey": "milestoneId",
+      "globalSecondaryIndexes": ["BabyMilestonesIndex", "UserMilestonesIndex", "MilestoneTypeIndex"]
+    }
+  },
+  "exports": {
+    "usersTableName": "UpNest-DynamoDB-dev-UsersTable",
+    "usersTableArn": "UpNest-DynamoDB-dev-UsersTableArn",
+    "babiesTableName": "UpNest-DynamoDB-dev-BabiesTable",
+    "babiesTableArn": "UpNest-DynamoDB-dev-BabiesTableArn",
+    "growthDataTableName": "UpNest-DynamoDB-dev-GrowthDataTable",
+    "growthDataTableArn": "UpNest-DynamoDB-dev-GrowthDataTableArn",
+    "vaccinationsTableName": "UpNest-DynamoDB-dev-VaccinationsTable",
+    "vaccinationsTableArn": "UpNest-DynamoDB-dev-VaccinationsTableArn",
+    "milestonesTableName": "UpNest-DynamoDB-dev-MilestonesTable",
+    "milestonesTableArn": "UpNest-DynamoDB-dev-MilestonesTableArn",
+    "environment": "UpNest-DynamoDB-dev-Environment",
+    "stackName": "UpNest-DynamoDB-dev-StackName"
+  },
+  "crudTestsCompleted": true,
+  "deploymentDate": "2025-06-28T15:15:11.454Z",
+  "lastValidated": "2025-06-28T16:30:00Z"
+}

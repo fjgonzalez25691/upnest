@@ -1,0 +1,12 @@
+{
+  "dataId": {"S": "test-growth-001"},
+  "babyId": {"S": "test-baby-001"},
+  "userId": {"S": "test-user-001"},
+  "measurementDate": {"S": "2025-06-28"},
+  "measurementType": {"S": "weight"},
+  "value": {"N": "4500"},
+  "unit": {"S": "grams"},
+  "notes": {"S": "Monthly checkup"},
+  "createdAt": {"S": "2025-06-28T12:00:00Z"},
+  "updatedAt": {"S": "2025-06-28T12:00:00Z"}
+}

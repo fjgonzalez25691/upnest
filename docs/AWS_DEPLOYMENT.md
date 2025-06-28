@@ -244,29 +244,73 @@ jobs:
 ```bash
 # Frontend (.env.production)
 REACT_APP_API_URL=https://api.upnest-demo.com
-REACT_APP_COGNITO_USER_POOL_ID=us-east-1_XXXXXXXXX
+REACT_APP_COGNITO_USER_POOL_ID=eu-south-2_XXXXXXXXX
 REACT_APP_COGNITO_CLIENT_ID=xxxxxxxxxxxxxxxxxxxx
-REACT_APP_COGNITO_DOMAIN=https://upnest.auth.us-east-1.amazoncognito.com
+REACT_APP_COGNITO_DOMAIN=https://upnest.auth.eu-south-2.amazoncognito.com
 REACT_APP_ENVIRONMENT=production
 
 # Backend (Lambda environment variables)
-COGNITO_USER_POOL_ID=us-east-1_XXXXXXXXX
+COGNITO_USER_POOL_ID=eu-south-2_XXXXXXXXX
 COGNITO_CLIENT_ID=xxxxxxxxxxxxxxxxxxxx
-COGNITO_REGION=us-east-1
+COGNITO_REGION=eu-south-2
 DYNAMODB_USERS_TABLE=UpNest-Users-prod
 DYNAMODB_BABIES_TABLE=UpNest-Babies-prod
 DYNAMODB_GROWTH_TABLE=UpNest-GrowthData-prod
+DYNAMODB_VACCINATIONS_TABLE=UpNest-Vaccinations-prod
+DYNAMODB_MILESTONES_TABLE=UpNest-Milestones-prod
 ```
 
-### Development Environment
+### Development Environment (Current Deployment)
+```bash
+# Frontend (.env.development)
+REACT_APP_API_URL=http://localhost:3000
+REACT_APP_COGNITO_USER_POOL_ID=eu-south-2_XXXXXXXXX
+REACT_APP_COGNITO_CLIENT_ID=xxxxxxxxxxxxxxxxxxxx
+REACT_APP_COGNITO_DOMAIN=https://upnest.auth.eu-south-2.amazoncognito.com
+REACT_APP_ENVIRONMENT=development
+
+# Backend (Lambda environment variables) - DEV Environment
+COGNITO_USER_POOL_ID=eu-south-2_XXXXXXXXX
+COGNITO_CLIENT_ID=xxxxxxxxxxxxxxxxxxxx
+COGNITO_REGION=eu-south-2
+DYNAMODB_USERS_TABLE=UpNest-Users-dev
+DYNAMODB_BABIES_TABLE=UpNest-Babies-dev
+DYNAMODB_GROWTH_TABLE=UpNest-GrowthData-dev
+DYNAMODB_VACCINATIONS_TABLE=UpNest-Vaccinations-dev
+DYNAMODB_MILESTONES_TABLE=UpNest-Milestones-dev
+
+# AWS Configuration
+AWS_PROFILE=fran-dev
+AWS_REGION=eu-south-2
+```
+
+### CloudFormation Exports (For Lambda Integration)
+```bash
+# Use these CloudFormation exports in Lambda templates instead of hardcoded table names
+!ImportValue 'UpNest-DynamoDB-dev-UsersTable'
+!ImportValue 'UpNest-DynamoDB-dev-BabiesTable'
+!ImportValue 'UpNest-DynamoDB-dev-GrowthDataTable'
+!ImportValue 'UpNest-DynamoDB-dev-VaccinationsTable'
+!ImportValue 'UpNest-DynamoDB-dev-MilestonesTable'
+
+# Table ARNs for IAM policies
+!ImportValue 'UpNest-DynamoDB-dev-UsersTableArn'
+!ImportValue 'UpNest-DynamoDB-dev-BabiesTableArn'
+!ImportValue 'UpNest-DynamoDB-dev-GrowthDataTableArn'
+!ImportValue 'UpNest-DynamoDB-dev-VaccinationsTableArn'
+!ImportValue 'UpNest-DynamoDB-dev-MilestonesTableArn'
+```
+
+### Local Testing Environment
 ```bash
 # Local development
 REACT_APP_API_URL=http://localhost:3000
 REACT_APP_ENVIRONMENT=development
 
-# Local Lambda testing
+# Local Lambda testing with SAM CLI
 SAM_CLI_TELEMETRY=0
-AWS_PROFILE=upnest-dev
+AWS_PROFILE=fran-dev
+AWS_REGION=eu-south-2
 ```
 
 ## Security Configuration

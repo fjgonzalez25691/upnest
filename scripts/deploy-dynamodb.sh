@@ -14,7 +14,7 @@ NC='\033[0m' # No Color
 
 # Default values
 ENVIRONMENT="dev"
-REGION="us-east-1"
+REGION="eu-south-2"
 STACK_NAME=""
 BILLING_MODE="PAY_PER_REQUEST"
 
@@ -26,13 +26,13 @@ show_help() {
     echo ""
     echo "Options:"
     echo "  -e, --environment ENV    Environment (dev, staging, prod) [default: dev]"
-    echo "  -r, --region REGION      AWS region [default: us-east-1]"
+    echo "  -r, --region REGION      AWS region [default: eu-south-2]"
     echo "  -s, --stack-name NAME    CloudFormation stack name [default: upnest-dynamodb-ENV]"
     echo "  -b, --billing-mode MODE  Billing mode (PAY_PER_REQUEST, PROVISIONED) [default: PAY_PER_REQUEST]"
     echo "  -h, --help               Show this help message"
     echo ""
     echo "Examples:"
-    echo "  $0 -e dev -r us-east-1"
+    echo "  $0 -e dev -r eu-south-2"
     echo "  $0 --environment prod --region us-west-2"
     echo "  $0 -e staging -s my-custom-stack-name"
 }
@@ -112,10 +112,8 @@ echo ""
 echo -e "${BLUE}Checking if stack exists...${NC}"
 if aws cloudformation describe-stacks --stack-name "$STACK_NAME" --region "$REGION" &>/dev/null; then
     echo -e "${YELLOW}Stack exists. This will be an update operation.${NC}"
-    OPERATION="update"
 else
     echo -e "${GREEN}Stack does not exist. This will be a create operation.${NC}"
-    OPERATION="create"
 fi
 
 # Validate CloudFormation template
