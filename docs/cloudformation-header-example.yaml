@@ -1,0 +1,5 @@
+# CloudFormation YAML Configuration
+# yaml-language-server: $schema=https://raw.githubusercontent.com/awslabs/goformation/master/schema/cloudformation.schema.json
+
+# This file helps VS Code understand CloudFormation syntax
+# Place this comment at the top of CloudFormation YAML files

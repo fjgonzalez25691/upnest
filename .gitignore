@@ -66,3 +66,6 @@ Thumbs.db
 
 # Miscellaneous
 COGNITO_SETUP.md
+
+# Ignore folder trello-cards
+trello-cards/
