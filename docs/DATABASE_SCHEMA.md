@@ -195,14 +195,24 @@ erDiagram
   "babyId": "baby-uuid-abc123",
   "userId": "auth0|cognito-sub-12345",
   "measurementDate": "2024-01-15",
-  "measurementType": "weight",
-  "value": 12.5,
-  "unit": "kg",
-  "percentile": 75.2,
-  "zscore": 0.68,
-  "measurementSource": "manual",
+  "measurements": {
+    "weight": 4500,
+    "height": 75.2,
+    "headCircumference": 46.8
+  },
+  "percentiles": {
+    "weight": 75.2,
+    "height": 68.5,
+    "headCircumference": 72.1
+  },
+  "zscores": {
+    "weight": 0.68,
+    "height": 0.45,
+    "headCircumference": 0.58
+  },
+  "measurementSource": "pediatrician",
   "deviceInfo": null,
-  "notes": "Regular checkup - baby healthy and active",
+  "notes": "Regular 6-month checkup - all measurements normal",
   "isEstimated": false,
   "createdAt": "2024-01-15T14:20:00Z",
   "updatedAt": "2024-01-15T14:20:00Z"
@@ -316,16 +326,28 @@ erDiagram
    });
    ```
 
-4. **Get Specific Growth Data (e.g., Weight Only)**
+4. **Get Baby's Growth History (All Measurements)**
    ```javascript
-   const weightData = await dynamodb.query({
+   const allMeasurements = await dynamodb.query({
      TableName: 'UpNest-GrowthData-prod',
      IndexName: 'BabyGrowthIndex', 
      KeyConditionExpression: 'babyId = :babyId',
-     FilterExpression: 'measurementType = :type',
      ExpressionAttributeValues: { 
-       ':babyId': babyId,
-       ':type': 'weight'
+       ':babyId': babyId
+     },
+     ScanIndexForward: false // Most recent first
+   });
+   ```
+
+5. **Get Weight-Only Measurements (Filter at Application Level)**
+   ```javascript
+   const allMeasurements = await dynamodb.query({
+     TableName: 'UpNest-GrowthData-prod',
+     IndexName: 'BabyGrowthIndex', 
+     KeyConditionExpression: 'babyId = :babyId',
+     FilterExpression: 'attribute_exists(weight)',
+     ExpressionAttributeValues: { 
+       ':babyId': babyId
      },
      ScanIndexForward: false
    });
@@ -344,6 +366,8 @@ erDiagram
        ':userId': currentUserId,
        ':fromDate': thirtyDaysAgo.toISOString().split('T')[0]
      }
+   });
+   ```
    });
    ```
 

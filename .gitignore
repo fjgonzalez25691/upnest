@@ -28,6 +28,10 @@ __pycache__/
 # AWS SAM build artifacts
 .aws-sam/
 
+# Lambda development files
+aws/lambdas/tests/test-*.json
+aws/lambdas/env.json
+
 # Editor directories and files
 .vscode/
 !.vscode/extensions.json
@@ -64,8 +68,6 @@ coverage.xml
 # OS files
 Thumbs.db
 
-# Miscellaneous
-COGNITO_SETUP.md
 
 # Ignore folder trello-cards
 trello-cards/

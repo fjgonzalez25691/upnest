@@ -1,9 +1,0 @@
-{
-  "babyId": {"S": "baby-001"},
-  "userId": {"S": "test-user-001"},
-  "name": {"S": "Baby One"},
-  "dateOfBirth": {"S": "2024-01-15"},
-  "gender": {"S": "female"},
-  "isActive": {"BOOL": true},
-  "createdAt": {"S": "2025-06-28T12:00:00Z"}
-}

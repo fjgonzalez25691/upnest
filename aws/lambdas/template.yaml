@@ -1,0 +1,116 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  UpNest Lambda Functions - Baby CRUD API and Percentile Calculations
+
+# Global configuration for all Lambda functions
+Globals:
+  Function:
+    Timeout: 30
+    Runtime: python3.11
+    Environment:
+      Variables:
+        # DynamoDB Table Names (imported from CloudFormation)
+        USERS_TABLE: !ImportValue UpNest-DynamoDB-dev-UsersTableName
+        BABIES_TABLE: !ImportValue UpNest-DynamoDB-dev-BabiesTableName
+        GROWTH_DATA_TABLE: !ImportValue UpNest-DynamoDB-dev-GrowthDataTableName
+        VACCINATIONS_TABLE: !ImportValue UpNest-DynamoDB-dev-VaccinationsTableName
+        MILESTONES_TABLE: !ImportValue UpNest-DynamoDB-dev-MilestonesTableName
+        
+        # Cognito Configuration
+        COGNITO_USER_POOL_ID: eu-south-2_WInbcDDjo
+        COGNITO_CLIENT_ID: 75g0r5a7bbp1mgpmqrg3e1iibm
+        COGNITO_REGION: eu-south-2
+        
+        # Application Configuration
+        LOG_LEVEL: INFO
+
+Parameters:
+  Environment:
+    Type: String
+    Default: dev
+    Description: Deployment environment
+
+Resources:
+  # Baby Management Functions
+  CreateBabyFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub upnest-create-baby-${Environment}
+      CodeUri: babies/
+      Handler: create.lambda_handler
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !ImportValue UpNest-DynamoDB-dev-BabiesTableName
+      Events:
+        CreateBaby:
+          Type: Api
+          Properties:
+            Path: /babies
+            Method: post
+            
+  GetBabyFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub upnest-get-baby-${Environment}
+      CodeUri: babies/
+      Handler: get.lambda_handler
+      Policies:
+        - DynamoDBReadPolicy:
+            TableName: !ImportValue UpNest-DynamoDB-dev-BabiesTableName
+      Events:
+        GetBaby:
+          Type: Api
+          Properties:
+            Path: /babies/{babyId}
+            Method: get
+            
+  ListBabiesFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub upnest-list-babies-${Environment}
+      CodeUri: babies/
+      Handler: list.lambda_handler
+      Policies:
+        - DynamoDBReadPolicy:
+            TableName: !ImportValue UpNest-DynamoDB-dev-BabiesTableName
+      Events:
+        ListBabies:
+          Type: Api
+          Properties:
+            Path: /babies
+            Method: get
+
+  UpdateBabyFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub upnest-update-baby-${Environment}
+      CodeUri: babies/
+      Handler: update.lambda_handler
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !ImportValue UpNest-DynamoDB-dev-BabiesTableName
+      Events:
+        UpdateBaby:
+          Type: Api
+          Properties:
+            Path: /babies/{babyId}
+            Method: put
+
+  # Percentile Calculation Function
+  CalculatePercentilesFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub upnest-calculate-percentiles-${Environment}
+      CodeUri: percentiles/
+      Handler: calculate.lambda_handler
+      Policies:
+        - DynamoDBReadPolicy:
+            TableName: !ImportValue UpNest-DynamoDB-dev-GrowthDataTableName
+
+Outputs:
+  BabyCrudApiUrl:
+    Description: "API Gateway endpoint URL for Baby CRUD operations"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/"
+    Export:
+      Name: !Sub UpNest-BabyCrud-${Environment}-ApiUrl

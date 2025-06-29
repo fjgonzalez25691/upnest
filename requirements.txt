@@ -1,0 +1,27 @@
+# UpNest - Requirements for local development and testing
+# Install in virtual environment: pip install -r requirements.txt
+
+# Core dependencies for Lambda development
+boto3>=1.34.0
+PyJWT>=2.8.0
+requests>=2.31.0
+cryptography>=41.0.0
+
+# Data processing (for percentile calculations)
+numpy>=1.26.0
+pandas>=2.3.0
+scipy>=1.15.0
+openpyxl>=3.1.0
+
+# Development and testing
+pytest>=7.4.0
+moto>=4.2.0
+python-dotenv>=1.0.0
+
+# AWS SAM CLI (install globally: pip install aws-sam-cli)
+# sam==1.106.0  # Uncomment if you want to install via pip
+
+# Code quality
+black>=23.0.0
+flake8>=6.0.0
+mypy>=1.7.0

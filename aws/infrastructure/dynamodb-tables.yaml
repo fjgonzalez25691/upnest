@@ -166,8 +166,6 @@ Resources:
           AttributeType: S  # User ID for data isolation and security
         - AttributeName: measurementDate
           AttributeType: S  # ISO date string for chronological sorting
-        - AttributeName: measurementType
-          AttributeType: S  # Type: weight, height, head_circumference
       
       # Primary key configuration
       KeySchema:
@@ -195,16 +193,7 @@ Resources:
               KeyType: RANGE   # Sort by date for timeline views
           Projection:
             ProjectionType: ALL  # Include all attributes for analysis
-        
-        # Index to filter by measurement type (weight only, height only, etc.)
-        - IndexName: BabyMeasurementTypeIndex
-          KeySchema:
-            - AttributeName: babyId
-              KeyType: HASH    # Partition by baby
-            - AttributeName: measurementType
-              KeyType: RANGE   # Sort by measurement type
-          Projection:
-            ProjectionType: ALL  # Include all data for type-specific charts
+      
       PointInTimeRecoverySpecification:
         PointInTimeRecoveryEnabled: true
       SSESpecification:

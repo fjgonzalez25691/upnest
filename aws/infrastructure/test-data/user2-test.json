@@ -1,8 +1,0 @@
-{
-  "userId": {"S": "test-user-002"},
-  "email": {"S": "user2@example.com"},
-  "name": {"S": "User Two"},
-  "dateOfBirth": {"S": "1985-05-15"},
-  "createdAt": {"S": "2025-06-28T12:00:00Z"},
-  "updatedAt": {"S": "2025-06-28T12:00:00Z"}
-}
