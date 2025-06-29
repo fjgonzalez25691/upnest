@@ -12,11 +12,11 @@ import os
 # Add shared utilities to path
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'shared'))
 
-from dynamodb_client import dynamodb_client
-from jwt_utils import jwt_validator, extract_token_from_event
+from dynamodb_client import get_dynamodb_client
+from jwt_utils import get_jwt_validator, extract_token_from_event
 from response_utils import (
-    created_response, bad_request_response, unauthorized_response,
-    internal_error_response, handle_lambda_error
+    success_response, bad_request_response, unauthorized_response,
+    not_found_response, internal_error_response, handle_lambda_error
 )
 from validation_utils import GrowthDataValidator, generate_id
 
@@ -56,7 +56,8 @@ def lambda_handler(event, context):
         "message": "Growth data created successfully"
     }
     """
-    logger.info(f"Creating new growth data record - Request ID: {context.aws_request_id}")
+    request_id = getattr(context, 'aws_request_id', 'test-request')
+    logger.info(f"Creating new growth data record - Request ID: {request_id}")
     
     # Extract and validate JWT token
     token = extract_token_from_event(event)
@@ -64,6 +65,7 @@ def lambda_handler(event, context):
         return unauthorized_response("Authorization token is required")
     
     try:
+        jwt_validator = get_jwt_validator()
         user_id = jwt_validator.extract_user_id(token)
         logger.info(f"Authenticated user: {user_id}")
     except ValueError as e:
@@ -88,18 +90,19 @@ def lambda_handler(event, context):
     
     # Verify baby exists and belongs to user
     try:
+        dynamodb_client = get_dynamodb_client()
         baby = dynamodb_client.get_item('babies', {'babyId': baby_id})
         
         if not baby:
-            return bad_request_response("Baby not found")
+            return not_found_response("Baby not found")
         
         # ✅ CRITICAL: Verify baby belongs to authenticated user
         if baby.get('userId') != user_id:
             logger.warning(f"Unauthorized access: user {user_id} tried to add growth data for baby {baby_id}")
-            return bad_request_response("Baby not found")
+            return not_found_response("Baby not found")
             
         if not baby.get('isActive', True):
-            return bad_request_response("Baby not found")
+            return not_found_response("Baby not found")
             
     except Exception as e:
         logger.error(f"Error verifying baby ownership: {e}")
@@ -140,7 +143,7 @@ def lambda_handler(event, context):
         logger.error(f"Error creating growth data: {e}")
         return internal_error_response("Failed to create growth data")
     
-    return created_response(
+    return success_response(
         data=growth_record,
         message="Growth data created successfully"
     )

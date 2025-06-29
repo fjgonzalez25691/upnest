@@ -11,8 +11,8 @@ import os
 # Add shared utilities to path
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'shared'))
 
-from dynamodb_client import dynamodb_client
-from jwt_utils import jwt_validator, extract_token_from_event
+from dynamodb_client import get_dynamodb_client
+from jwt_utils import get_jwt_validator, extract_token_from_event
 from response_utils import (
     success_response, unauthorized_response, not_found_response,
     handle_lambda_error
@@ -41,7 +41,8 @@ def lambda_handler(event, context):
         }
     }
     """
-    logger.info(f"Getting baby profile - Request ID: {context.aws_request_id}")
+    request_id = getattr(context, 'aws_request_id', 'test-request')
+    logger.info(f"Getting baby profile - Request ID: {request_id}")
     
     # Extract and validate JWT token
     token = extract_token_from_event(event)
@@ -49,6 +50,7 @@ def lambda_handler(event, context):
         return unauthorized_response("Authorization token is required")
     
     try:
+        jwt_validator = get_jwt_validator()
         user_id = jwt_validator.extract_user_id(token)
         logger.info(f"Authenticated user: {user_id}")
     except ValueError as e:
@@ -61,6 +63,7 @@ def lambda_handler(event, context):
     
     # Retrieve baby from DynamoDB
     try:
+        dynamodb_client = get_dynamodb_client()
         baby = dynamodb_client.get_item('babies', {'babyId': baby_id})
         
         if not baby:

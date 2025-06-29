@@ -14,8 +14,8 @@ shared_path = os.path.join(os.path.dirname(__file__), '..', 'shared')
 sys.path.insert(0, shared_path)
 
 try:
-    from dynamodb_client import dynamodb_client
-    from jwt_utils import jwt_validator, extract_token_from_event
+    from dynamodb_client import get_dynamodb_client
+    from jwt_utils import get_jwt_validator, extract_token_from_event
     from response_utils import (
         created_response, bad_request_response, unauthorized_response,
         internal_error_response, handle_lambda_error
@@ -58,7 +58,8 @@ def lambda_handler(event, context):
         "message": "Baby profile created successfully"
     }
     """
-    logger.info(f"Creating new baby profile - Request ID: {context.aws_request_id}")
+    request_id = getattr(context, 'aws_request_id', 'test-request')
+    logger.info(f"Creating new baby profile - Request ID: {request_id}")
     
     # Extract and validate JWT token
     token = extract_token_from_event(event)
@@ -66,6 +67,7 @@ def lambda_handler(event, context):
         return unauthorized_response("Authorization token is required")
     
     try:
+        jwt_validator = get_jwt_validator()
         user_id = jwt_validator.extract_user_id(token)
         logger.info(f"Authenticated user: {user_id}")
     except ValueError as e:
@@ -101,6 +103,7 @@ def lambda_handler(event, context):
     
     # Store in DynamoDB
     try:
+        dynamodb_client = get_dynamodb_client()
         dynamodb_client.put_item('babies', baby_record)
         logger.info(f"Baby profile created successfully: {baby_id}")
     except Exception as e:

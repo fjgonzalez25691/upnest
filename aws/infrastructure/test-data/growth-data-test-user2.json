@@ -1,0 +1,12 @@
+{
+  "dataId": {"S": "growth-data-002-user2"},
+  "babyId": {"S": "baby-test-002-user2"},
+  "userId": {"S": "user-2-test-789012"},
+  "measurementDate": {"S": "2025-06-28"},
+  "measurementType": {"S": "height"},
+  "value": {"N": "65"},
+  "unit": {"S": "cm"},
+  "notes": {"S": "Monthly height measurement"},
+  "createdAt": {"S": "2025-06-28T12:00:00Z"},
+  "modifiedAt": {"S": "2025-06-28T12:00:00Z"}
+}

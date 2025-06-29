@@ -1,0 +1,12 @@
+{
+  "milestoneId": {"S": "milestone-002-user2"},
+  "babyId": {"S": "baby-test-002-user2"},
+  "userId": {"S": "user-2-test-789012"},
+  "milestoneType": {"S": "cognitive"},
+  "milestone": {"S": "First word"},
+  "achievedDate": {"S": "2025-06-15"},
+  "ageAtAchievement": {"N": "9"},
+  "notes": {"S": "Said 'mama' clearly for the first time"},
+  "createdAt": {"S": "2025-06-28T12:00:00Z"},
+  "modifiedAt": {"S": "2025-06-28T12:00:00Z"}
+}

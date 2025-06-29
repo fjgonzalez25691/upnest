@@ -16,7 +16,8 @@ def create_response(
     data: Optional[Any] = None,
     message: Optional[str] = None,
     error: Optional[Dict[str, Any]] = None,
-    headers: Optional[Dict[str, str]] = None
+    headers: Optional[Dict[str, str]] = None,
+    metadata: Optional[Dict[str, Any]] = None
 ) -> Dict[str, Any]:
     """
     Create standardized API Gateway response.
@@ -57,6 +58,9 @@ def create_response(
     if error:
         body['error'] = error
     
+    if metadata:
+        body['metadata'] = metadata
+    
     return {
         'statusCode': status_code,
         'headers': default_headers,
@@ -66,14 +70,21 @@ def create_response(
 def success_response(
     data: Optional[Any] = None,
     message: str = "Operation completed successfully",
-    status_code: int = 200
+    status_code: int = 200,
+    metadata: Optional[Dict[str, Any]] = None
 ) -> Dict[str, Any]:
     """Create success response (200-299)."""
-    return create_response(
-        status_code=status_code,
-        data=data,
-        message=message
-    )
+    response_data = {
+        'status_code': status_code,
+        'data': data,
+        'message': message
+    }
+    
+    if metadata:
+        response_data['metadata'] = metadata
+    
+    return create_response(**response_data)
+
 
 def created_response(
     data: Optional[Any] = None,
@@ -149,16 +160,16 @@ def not_found_response(
     )
 
 def validation_error_response(
-    message: str = "Validation failed",
-    details: Optional[List[str]] = None
+    errors: Optional[List[str]] = None,
+    message: str = "Validation failed"
 ) -> Dict[str, Any]:
     """Create validation error response (400)."""
     error = {
         'code': 'VALIDATION_ERROR',
         'message': message
     }
-    if details:
-        error['details'] = details
+    if errors:
+        error['errors'] = errors
     
     return create_response(
         status_code=400,
@@ -235,7 +246,12 @@ def handle_lambda_error(func):
         # Handle custom UpNest exceptions
         except Exception as e:
             # Check if it's a custom UpNest exception
-            from .exceptions import ERROR_RESPONSES
+            try:
+                from exceptions import ERROR_RESPONSES
+            except ImportError:
+                # If we can't import ERROR_RESPONSES, handle as generic error
+                logger.error(f"Unhandled error: {e}")
+                return internal_error_response("An error occurred while processing the request")
             
             for exception_type, response_builder in ERROR_RESPONSES.items():
                 if isinstance(e, exception_type):

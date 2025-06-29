@@ -1,0 +1,30 @@
+# DEVELOPMENT CONFIGURATION - CRITICAL RULES
+
+## PLATFORM-SPECIFIC COMMAND EXECUTION RULES
+
+### Windows PowerShell (CURRENT ENVIRONMENT)
+- **Shell**: powershell.exe
+- **Command Separator**: Use semicolon (`;`) instead of `&&`
+- **Examples**:
+  - ✅ `sam build; sam local start-api --port 3001` 
+  - ❌ `sam build && sam local start-api --port 3001`
+
+### Unix/Linux/macOS
+- **Command Separator**: Use `&&` for conditional execution
+- **Examples**:
+  - ✅ `sam build && sam local start-api --port 3001`
+
+## CURRENT WORKING ENVIRONMENT
+- **OS**: Windows
+- **Shell**: PowerShell
+- **Working Directory**: d:\proyectos\AWSLambdaHackathon\upnest\aws\lambdas
+- **Command Pattern**: ALWAYS use semicolon (`;`) as separator
+
+## AUTOMATED REMINDERS
+When using run_in_terminal tool:
+1. Check current shell (powershell.exe)
+2. Use appropriate command separator (`;` for PowerShell)
+3. Never use `&&` in PowerShell environment
+
+---
+**THIS FILE IS FOR SYSTEM REFERENCE - DO NOT MODIFY WITHOUT UPDATING ALL DOCUMENTATION**

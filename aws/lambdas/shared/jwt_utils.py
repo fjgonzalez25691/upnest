@@ -156,5 +156,11 @@ def extract_token_from_event(event: Dict[str, Any]) -> Optional[str]:
     query_params = event.get('queryStringParameters') or {}
     return query_params.get('token')
 
-# Global instance
-jwt_validator = JWTValidator()
+# Global instance (lazy loading)
+_jwt_validator = None
+
+def get_jwt_validator():
+    global _jwt_validator
+    if _jwt_validator is None:
+        _jwt_validator = JWTValidator()
+    return _jwt_validator

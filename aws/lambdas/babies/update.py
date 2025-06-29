@@ -12,13 +12,13 @@ import os
 # Add shared utilities to path
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'shared'))
 
-from dynamodb_client import dynamodb_client
-from jwt_utils import jwt_validator, extract_token_from_event
+from dynamodb_client import get_dynamodb_client
+from jwt_utils import get_jwt_validator, extract_token_from_event
 from response_utils import (
     success_response, bad_request_response, unauthorized_response,
     not_found_response, internal_error_response, handle_lambda_error
 )
-from validation_utils import BabyValidator
+from validation_utils import BabyValidator, ValidationError
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
@@ -53,7 +53,8 @@ def lambda_handler(event, context):
         "message": "Baby profile updated successfully"
     }
     """
-    logger.info(f"Updating baby profile - Request ID: {context.aws_request_id}")
+    request_id = getattr(context, 'aws_request_id', 'test-request')
+    logger.info(f"Updating baby profile - Request ID: {request_id}")
     
     # Extract and validate JWT token
     token = extract_token_from_event(event)
@@ -61,13 +62,15 @@ def lambda_handler(event, context):
         return unauthorized_response("Authorization token is required")
     
     try:
+        jwt_validator = get_jwt_validator()
         user_id = jwt_validator.extract_user_id(token)
         logger.info(f"Authenticated user: {user_id}")
     except ValueError as e:
         return unauthorized_response(str(e))
     
     # Get baby ID from path parameters
-    baby_id = event.get('pathParameters', {}).get('babyId')
+    path_parameters = event.get('pathParameters') or {}
+    baby_id = path_parameters.get('babyId')
     if not baby_id:
         return bad_request_response("Baby ID is required")
     
@@ -83,11 +86,16 @@ def lambda_handler(event, context):
     # Validate baby data
     try:
         validated_data = BabyValidator.validate_baby_data(body, is_update=True)
+    except ValidationError as e:
+        if e.details:
+            return bad_request_response(f"Validation failed: {'; '.join(e.details)}")
+        return bad_request_response(f"Validation failed: {str(e)}")
     except Exception as e:
         return bad_request_response(f"Validation failed: {str(e)}")
     
     # Check if baby exists and user owns it
     try:
+        dynamodb_client = get_dynamodb_client()
         existing_baby = dynamodb_client.get_item('babies', {'babyId': baby_id})
         
         if not existing_baby:

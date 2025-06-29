@@ -1,0 +1,240 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  UpNest Lambda Functions - Local Development Template
+
+# Global configuration for all Lambda functions
+Globals:
+  Function:
+    Timeout: 30
+    Runtime: python3.11
+    Environment:
+      Variables:
+        # DynamoDB Table Names (local development)
+        USERS_TABLE: upnest-users-local
+        BABIES_TABLE: upnest-babies-local
+        GROWTH_DATA_TABLE: upnest-growth-data-local
+        VACCINATIONS_TABLE: upnest-vaccinations-local
+        MILESTONES_TABLE: upnest-milestones-local
+        
+        # Cognito Configuration (testing mode)
+        COGNITO_USER_POOL_ID: us-east-1_test123456
+        COGNITO_CLIENT_ID: test-client-id
+        COGNITO_REGION: us-east-1
+        
+        # Application Configuration
+        LOG_LEVEL: DEBUG
+        TESTING_MODE: true
+        JWT_SECRET_KEY: test-secret-key-for-local-testing-only
+
+Parameters:
+  Environment:
+    Type: String
+    Default: local
+    Description: Deployment environment
+
+Resources:
+  # API Gateway Configuration
+  UpNestApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: local
+      Cors:
+        AllowMethods: "'GET,POST,PUT,DELETE,OPTIONS'"
+        AllowHeaders: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+        AllowOrigin: "'*'"
+        MaxAge: "'600'"
+
+  # Baby Management Functions
+  CreateBabyFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: upnest-create-baby-local
+      CodeUri: babies/
+      Handler: create.lambda_handler
+      Events:
+        CreateBaby:
+          Type: Api
+          Properties:
+            RestApiId: !Ref UpNestApi
+            Path: /babies
+            Method: post
+            
+  GetBabyFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: upnest-get-baby-local
+      CodeUri: babies/
+      Handler: get.lambda_handler
+      Events:
+        GetBaby:
+          Type: Api
+          Properties:
+            RestApiId: !Ref UpNestApi
+            Path: /babies/{babyId}
+            Method: get
+            
+  ListBabiesFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: upnest-list-babies-local
+      CodeUri: babies/
+      Handler: list.lambda_handler
+      Events:
+        ListBabies:
+          Type: Api
+          Properties:
+            RestApiId: !Ref UpNestApi
+            Path: /babies
+            Method: get
+
+  UpdateBabyFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: upnest-update-baby-local
+      CodeUri: babies/
+      Handler: update.lambda_handler
+      Events:
+        UpdateBaby:
+          Type: Api
+          Properties:
+            RestApiId: !Ref UpNestApi
+            Path: /babies/{babyId}
+            Method: put
+            
+  DeleteBabyFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: upnest-delete-baby-local
+      CodeUri: babies/
+      Handler: delete.lambda_handler
+      Events:
+        DeleteBaby:
+          Type: Api
+          Properties:
+            RestApiId: !Ref UpNestApi
+            Path: /babies/{babyId}
+            Method: delete
+
+  # Growth Data Management Functions
+  CreateGrowthDataFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: upnest-create-growth-data-local
+      CodeUri: growth-data/
+      Handler: create.lambda_handler
+      Events:
+        CreateGrowthData:
+          Type: Api
+          Properties:
+            RestApiId: !Ref UpNestApi
+            Path: /growth-data
+            Method: post
+            
+  GetGrowthDataFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: upnest-get-growth-data-local
+      CodeUri: growth-data/
+      Handler: get.lambda_handler
+      Events:
+        GetGrowthData:
+          Type: Api
+          Properties:
+            RestApiId: !Ref UpNestApi
+            Path: /growth-data/{recordId}
+            Method: get
+            
+  ListGrowthDataFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: upnest-list-growth-data-local
+      CodeUri: growth-data/
+      Handler: list.lambda_handler
+      Events:
+        ListGrowthData:
+          Type: Api
+          Properties:
+            RestApiId: !Ref UpNestApi
+            Path: /babies/{babyId}/growth
+            Method: get
+
+  UpdateGrowthDataFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: upnest-update-growth-data-local
+      CodeUri: growth-data/
+      Handler: update.lambda_handler
+      Events:
+        UpdateGrowthData:
+          Type: Api
+          Properties:
+            RestApiId: !Ref UpNestApi
+            Path: /growth-data/{recordId}
+            Method: put
+            
+  DeleteGrowthDataFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: upnest-delete-growth-data-local
+      CodeUri: growth-data/
+      Handler: delete.lambda_handler
+      Events:
+        DeleteGrowthData:
+          Type: Api
+          Properties:
+            RestApiId: !Ref UpNestApi
+            Path: /growth-data/{recordId}
+            Method: delete
+
+  # Advanced Functions
+  GetPercentilesFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: upnest-get-percentiles-local
+      CodeUri: advanced/
+      Handler: get_percentiles.lambda_handler
+      Events:
+        GetPercentiles:
+          Type: Api
+          Properties:
+            RestApiId: !Ref UpNestApi
+            Path: /babies/{babyId}/percentiles
+            Method: get
+            
+  GetGrowthChartFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: upnest-get-growth-chart-local
+      CodeUri: advanced/
+      Handler: get_growth_chart.lambda_handler
+      Events:
+        GetGrowthChart:
+          Type: Api
+          Properties:
+            RestApiId: !Ref UpNestApi
+            Path: /babies/{babyId}/growth-chart
+            Method: get
+
+  BulkImportFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: upnest-bulk-import-local
+      CodeUri: advanced/
+      Handler: bulk_import.lambda_handler
+      Events:
+        BulkImport:
+          Type: Api
+          Properties:
+            RestApiId: !Ref UpNestApi
+            Path: /babies/{babyId}/growth/bulk
+            Method: post
+
+Outputs:
+  UpNestApi:
+    Description: "API Gateway endpoint URL for local UpNest API"
+    Value: !Sub "https://${UpNestApi}.execute-api.${AWS::Region}.amazonaws.com/local/"
+    
+  UpNestApiId:
+    Description: "API Gateway ID"
+    Value: !Ref UpNestApi

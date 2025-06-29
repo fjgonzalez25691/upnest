@@ -1,0 +1,13 @@
+{
+  "babyId": {"S": "baby-test-002-user2"},
+  "userId": {"S": "user-2-test-789012"},
+  "name": {"S": "Lucas Miguel Test"},
+  "gender": {"S": "male"},
+  "dateOfBirth": {"S": "2024-03-20"},
+  "isActive": {"BOOL": true},
+  "birthWeight": {"N": "3200"},
+  "birthHeight": {"N": "48"},
+  "birthHeadCircumference": {"N": "33"},
+  "createdAt": {"S": "2025-06-28T12:00:00Z"},
+  "modifiedAt": {"S": "2025-06-28T12:00:00Z"}
+}

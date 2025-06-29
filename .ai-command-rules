@@ -1,0 +1,32 @@
+# CLAUDE AI SYSTEM REMINDER
+
+## CRITICAL COMMAND SYNTAX RULE
+
+**CURRENT ENVIRONMENT**: Windows PowerShell (powershell.exe)
+
+### COMMAND CONCATENATION RULE:
+- ✅ **USE**: Semicolon (`;`) 
+- ❌ **NEVER USE**: Double ampersand (`&&`)
+
+### EXAMPLES:
+```powershell
+# ✅ CORRECT - PowerShell syntax
+sam build; sam local start-api --port 3001
+cd aws/lambdas; sam build; sam local invoke FunctionName
+python -m pytest; sam deploy
+
+# ❌ WRONG - Unix/Linux syntax (DO NOT USE)
+sam build && sam local start-api --port 3001
+cd aws/lambdas && sam build && sam local invoke FunctionName
+```
+
+### WHEN TO APPLY:
+- Every time using `run_in_terminal` tool
+- Any terminal command generation
+- Multi-step command sequences
+- Build and deployment scripts
+
+---
+**AI SYSTEM NOTE**: Read this file before generating ANY terminal commands.
+**USER ENVIRONMENT**: Windows PowerShell confirmed in environment_info.
+**CRITICAL**: User has specified this rule multiple times - DO NOT FORGET.

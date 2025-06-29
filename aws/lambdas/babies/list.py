@@ -14,8 +14,8 @@ shared_dir = os.path.join(current_dir, '..', 'shared')
 sys.path.insert(0, shared_dir)
 
 try:
-    from dynamodb_client import dynamodb_client
-    from jwt_utils import jwt_validator, extract_token_from_event
+    from dynamodb_client import get_dynamodb_client
+    from jwt_utils import get_jwt_validator, extract_token_from_event
     from response_utils import (
         success_response, unauthorized_response, handle_lambda_error
     )
@@ -63,7 +63,8 @@ def lambda_handler(event, context):
         "count": 1
     }
     """
-    logger.info(f"Listing babies for user - Request ID: {context.aws_request_id}")
+    request_id = getattr(context, 'aws_request_id', 'test-request')
+    logger.info(f"Listing babies for user - Request ID: {request_id}")
     
     # Extract and validate JWT token
     token = extract_token_from_event(event)
@@ -71,6 +72,7 @@ def lambda_handler(event, context):
         return unauthorized_response("Authorization token is required")
     
     try:
+        jwt_validator = get_jwt_validator()
         user_id = jwt_validator.extract_user_id(token)
         logger.info(f"Authenticated user: {user_id}")
     except ValueError as e:
@@ -86,6 +88,7 @@ def lambda_handler(event, context):
     try:
         from boto3.dynamodb.conditions import Key
         
+        dynamodb_client = get_dynamodb_client()
         babies = dynamodb_client.query_gsi(
             table_name='babies',
             index_name='UserIndex',

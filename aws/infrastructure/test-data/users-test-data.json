@@ -1,0 +1,32 @@
+[
+  {
+    "userId": {"S": "user-1-test-123456"},
+    "email": {"S": "user1@test.com"},
+    "firstName": {"S": "User"},
+    "lastName": {"S": "One"},
+    "cognitoSub": {"S": "user-1-test-123456"},
+    "isActive": {"BOOL": true},
+    "createdAt": {"S": "2025-06-28T10:00:00Z"},
+    "modifiedAt": {"S": "2025-06-28T10:00:00Z"}
+  },
+  {
+    "userId": {"S": "user-2-test-789012"},
+    "email": {"S": "user2@test.com"},
+    "firstName": {"S": "User"},
+    "lastName": {"S": "Two"},
+    "cognitoSub": {"S": "user-2-test-789012"},
+    "isActive": {"BOOL": true},
+    "createdAt": {"S": "2025-06-28T10:00:00Z"},
+    "modifiedAt": {"S": "2025-06-28T10:00:00Z"}
+  },
+  {
+    "userId": {"S": "admin-test-456789"},
+    "email": {"S": "admin@test.com"},
+    "firstName": {"S": "Admin"},
+    "lastName": {"S": "User"},
+    "cognitoSub": {"S": "admin-test-456789"},
+    "isActive": {"BOOL": true},
+    "createdAt": {"S": "2025-06-28T10:00:00Z"},
+    "modifiedAt": {"S": "2025-06-28T10:00:00Z"}
+  }
+]

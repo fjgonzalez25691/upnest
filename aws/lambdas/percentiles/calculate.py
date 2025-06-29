@@ -9,7 +9,7 @@ from scipy.stats import norm
 # Add shared utilities to path
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'shared'))
 
-from jwt_utils import jwt_validator, extract_token_from_event
+from jwt_utils import get_jwt_validator, extract_token_from_event
 from response_utils import (
     success_response, bad_request_response, unauthorized_response,
     internal_error_response, handle_lambda_error
@@ -56,6 +56,7 @@ def lambda_handler(event, context):
         return unauthorized_response("Authorization token is required")
     
     try:
+        jwt_validator = get_jwt_validator()
         user_id = jwt_validator.extract_user_id(token)
     except ValueError as e:
         return unauthorized_response(str(e))

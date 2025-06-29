@@ -103,5 +103,12 @@ class DynamoDBClient:
             logger.error(f"Error querying GSI {index_name} in {table_name}: {e}")
             raise
 
-# Global instance
-dynamodb_client = DynamoDBClient()
+# Global instance - lazy loading to avoid initialization issues during imports
+_dynamodb_client = None
+
+def get_dynamodb_client():
+    """Get the global DynamoDB client instance (lazy loading)."""
+    global _dynamodb_client
+    if _dynamodb_client is None:
+        _dynamodb_client = DynamoDBClient()
+    return _dynamodb_client

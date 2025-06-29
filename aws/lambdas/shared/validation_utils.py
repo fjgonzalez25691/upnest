@@ -200,12 +200,13 @@ class BabyValidator:
     """Specific validators for baby-related data."""
     
     @staticmethod
-    def validate_baby_data(data: Dict[str, Any]) -> Dict[str, Any]:
+    def validate_baby_data(data: Dict[str, Any], is_update: bool = False) -> Dict[str, Any]:
         """
         Validate baby creation/update data.
         
         Args:
             data: Baby data dictionary
+            is_update: If True, validation is for update (no required fields)
             
         Returns:
             Validated baby data
@@ -216,40 +217,44 @@ class BabyValidator:
         validator = Validator()
         errors = []
         
-        # Required fields for baby creation
-        required_fields = ['name', 'dateOfBirth', 'gender']
-        missing_fields = validator.validate_required_fields(data, required_fields)
-        if missing_fields:
-            errors.append(f"Missing required fields: {', '.join(missing_fields)}")
+        # Required fields only for creation, not updates
+        if not is_update:
+            required_fields = ['name', 'dateOfBirth', 'gender']
+            missing_fields = validator.validate_required_fields(data, required_fields)
+            if missing_fields:
+                errors.append(f"Missing required fields: {', '.join(missing_fields)}")
         
         validated_data = {}
         
-        # Validate name
-        try:
-            validated_data['name'] = validator.validate_string_length(
-                data.get('name', ''), 'Name', min_length=1, max_length=100
-            )
-        except ValidationError as e:
-            errors.append(str(e))
+        # Validate name (only if present)
+        if 'name' in data:
+            try:
+                validated_data['name'] = validator.validate_string_length(
+                    data.get('name', ''), 'Name', min_length=1, max_length=100
+                )
+            except ValidationError as e:
+                errors.append(str(e))
         
-        # Validate date of birth
-        try:
-            validated_data['dateOfBirth'] = validator.validate_date(
-                data.get('dateOfBirth'), 'Date of birth'
-            )
-            
-            # Check if date is not in the future
-            birth_date = datetime.strptime(validated_data['dateOfBirth'], '%Y-%m-%d').date()
-            if birth_date > date.today():
-                errors.append("Date of birth cannot be in the future")
-        except ValidationError as e:
-            errors.append(str(e))
+        # Validate date of birth (only if present)
+        if 'dateOfBirth' in data:
+            try:
+                validated_data['dateOfBirth'] = validator.validate_date(
+                    data.get('dateOfBirth'), 'Date of birth'
+                )
+                
+                # Check if date is not in the future
+                birth_date = datetime.strptime(validated_data['dateOfBirth'], '%Y-%m-%d').date()
+                if birth_date > date.today():
+                    errors.append("Date of birth cannot be in the future")
+            except ValidationError as e:
+                errors.append(str(e))
         
-        # Validate gender
-        try:
-            validated_data['gender'] = validator.validate_gender(data.get('gender'))
-        except ValidationError as e:
-            errors.append(str(e))
+        # Validate gender (only if present)
+        if 'gender' in data:
+            try:
+                validated_data['gender'] = validator.validate_gender(data.get('gender'))
+            except ValidationError as e:
+                errors.append(str(e))
         
         # Optional fields
         if 'premature' in data:
