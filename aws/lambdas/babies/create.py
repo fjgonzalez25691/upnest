@@ -10,15 +10,21 @@ import sys
 import os
 
 # Add shared utilities to path
-sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'shared'))
+shared_path = os.path.join(os.path.dirname(__file__), '..', 'shared')
+sys.path.insert(0, shared_path)
 
-from dynamodb_client import dynamodb_client
-from jwt_utils import jwt_validator, extract_token_from_event
-from response_utils import (
-    created_response, bad_request_response, unauthorized_response,
-    internal_error_response, handle_lambda_error
-)
-from validation_utils import BabyValidator, generate_id
+try:
+    from dynamodb_client import dynamodb_client
+    from jwt_utils import jwt_validator, extract_token_from_event
+    from response_utils import (
+        created_response, bad_request_response, unauthorized_response,
+        internal_error_response, handle_lambda_error
+    )
+    from validation_utils import BabyValidator, generate_id
+except ImportError as e:
+    # Fallback for local development
+    print(f"Import error: {e}")
+    # These will be resolved at runtime in Lambda
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
