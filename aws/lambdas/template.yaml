@@ -96,6 +96,131 @@ Resources:
           Properties:
             Path: /babies/{babyId}
             Method: put
+            
+  DeleteBabyFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub upnest-delete-baby-${Environment}
+      CodeUri: babies/
+      Handler: delete.lambda_handler
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !ImportValue UpNest-DynamoDB-dev-BabiesTableName
+      Events:
+        DeleteBaby:
+          Type: Api
+          Properties:
+            Path: /babies/{babyId}
+            Method: delete
+
+  # Growth Data Management Functions
+  CreateGrowthDataFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub upnest-create-growth-data-${Environment}
+      CodeUri: growth-data/
+      Handler: create.lambda_handler
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !ImportValue UpNest-DynamoDB-dev-GrowthDataTableName
+        - DynamoDBReadPolicy:
+            TableName: !ImportValue UpNest-DynamoDB-dev-BabiesTableName
+      Events:
+        CreateGrowthData:
+          Type: Api
+          Properties:
+            Path: /growth-data
+            Method: post
+            
+  GetGrowthDataFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub upnest-get-growth-data-${Environment}
+      CodeUri: growth-data/
+      Handler: get.lambda_handler
+      Policies:
+        - DynamoDBReadPolicy:
+            TableName: !ImportValue UpNest-DynamoDB-dev-GrowthDataTableName
+        - DynamoDBReadPolicy:
+            TableName: !ImportValue UpNest-DynamoDB-dev-BabiesTableName
+      Events:
+        GetGrowthData:
+          Type: Api
+          Properties:
+            Path: /growth-data/{recordId}
+            Method: get
+            
+  GetSingleGrowthDataFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub upnest-get-single-growth-data-${Environment}
+      CodeUri: growth-data/
+      Handler: get_single.lambda_handler
+      Policies:
+        - DynamoDBReadPolicy:
+            TableName: !ImportValue UpNest-DynamoDB-dev-GrowthDataTableName
+        - DynamoDBReadPolicy:
+            TableName: !ImportValue UpNest-DynamoDB-dev-BabiesTableName
+      Events:
+        GetSingleGrowthData:
+          Type: Api
+          Properties:
+            Path: /babies/{babyId}/growth-data/{recordId}
+            Method: get
+            
+  ListGrowthDataFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub upnest-list-growth-data-${Environment}
+      CodeUri: growth-data/
+      Handler: list.lambda_handler
+      Policies:
+        - DynamoDBReadPolicy:
+            TableName: !ImportValue UpNest-DynamoDB-dev-GrowthDataTableName
+        - DynamoDBReadPolicy:
+            TableName: !ImportValue UpNest-DynamoDB-dev-BabiesTableName
+      Events:
+        ListGrowthData:
+          Type: Api
+          Properties:
+            Path: /babies/{babyId}/growth-data
+            Method: get
+            
+  UpdateGrowthDataFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub upnest-update-growth-data-${Environment}
+      CodeUri: growth-data/
+      Handler: update.lambda_handler
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !ImportValue UpNest-DynamoDB-dev-GrowthDataTableName
+        - DynamoDBReadPolicy:
+            TableName: !ImportValue UpNest-DynamoDB-dev-BabiesTableName
+      Events:
+        UpdateGrowthData:
+          Type: Api
+          Properties:
+            Path: /growth-data/{recordId}
+            Method: put
+            
+  DeleteGrowthDataFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub upnest-delete-growth-data-${Environment}
+      CodeUri: growth-data/
+      Handler: delete.lambda_handler
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !ImportValue UpNest-DynamoDB-dev-GrowthDataTableName
+        - DynamoDBReadPolicy:
+            TableName: !ImportValue UpNest-DynamoDB-dev-BabiesTableName
+      Events:
+        DeleteGrowthData:
+          Type: Api
+          Properties:
+            Path: /growth-data/{recordId}
+            Method: delete
 
   # Percentile Calculation Function
   CalculatePercentilesFunction:
@@ -107,6 +232,63 @@ Resources:
       Policies:
         - DynamoDBReadPolicy:
             TableName: !ImportValue UpNest-DynamoDB-dev-GrowthDataTableName
+
+  # Advanced Features Functions  
+  GetCurrentPercentilesFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub upnest-get-current-percentiles-${Environment}
+      CodeUri: advanced/
+      Handler: get_percentiles.lambda_handler
+      Policies:
+        - DynamoDBReadPolicy:
+            TableName: !ImportValue UpNest-DynamoDB-dev-BabiesTableName
+        - DynamoDBReadPolicy:
+            TableName: !ImportValue UpNest-DynamoDB-dev-GrowthDataTableName
+      Events:
+        GetCurrentPercentiles:
+          Type: Api
+          Properties:
+            Path: /babies/{babyId}/percentiles
+            Method: get
+
+  GetGrowthChartDataFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub upnest-get-growth-chart-data-${Environment}
+      CodeUri: advanced/
+      Handler: get_growth_chart.lambda_handler
+      Policies:
+        - DynamoDBReadPolicy:
+            TableName: !ImportValue UpNest-DynamoDB-dev-BabiesTableName
+        - DynamoDBReadPolicy:
+            TableName: !ImportValue UpNest-DynamoDB-dev-GrowthDataTableName
+      Events:
+        GetGrowthChartData:
+          Type: Api
+          Properties:
+            Path: /babies/{babyId}/growth-chart
+            Method: get
+
+  BulkImportGrowthDataFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub upnest-bulk-import-growth-data-${Environment}
+      CodeUri: advanced/
+      Handler: bulk_import.lambda_handler
+      Timeout: 60  # Longer timeout for bulk operations
+      MemorySize: 512  # More memory for batch processing
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !ImportValue UpNest-DynamoDB-dev-GrowthDataTableName
+        - DynamoDBReadPolicy:
+            TableName: !ImportValue UpNest-DynamoDB-dev-BabiesTableName
+      Events:
+        BulkImportGrowthData:
+          Type: Api
+          Properties:
+            Path: /babies/{babyId}/growth/bulk
+            Method: post
 
 Outputs:
   BabyCrudApiUrl:
