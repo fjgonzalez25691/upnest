@@ -12,10 +12,10 @@ import os
 # Add shared utilities to path
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'shared'))
 
-from dynamodb_client import dynamodb_client
-from jwt_utils import jwt_validator, extract_token_from_event
+from dynamodb_client import get_dynamodb_client
+from jwt_utils import get_jwt_validator, extract_token_from_event
 from response_utils import (
-    ok_response, bad_request_response, unauthorized_response,
+    success_response, bad_request_response, unauthorized_response,
     not_found_response, internal_error_response, handle_lambda_error
 )
 from validation_utils import is_valid_uuid
@@ -35,6 +35,10 @@ def lambda_handler(event, context):
     Returns:
         dict: HTTP response with growth data record
     """
+    
+    # Get clients using lazy loading
+    dynamodb_client = get_dynamodb_client()
+    jwt_validator = get_jwt_validator()
     
     # Extract and validate JWT token
     token = extract_token_from_event(event)
@@ -194,7 +198,7 @@ def lambda_handler(event, context):
         
         logger.info(f"Retrieved growth data record {data_id} for baby {baby_id} by user {user_id}")
         
-        return ok_response(growth_data)
+        return success_response(growth_data)
         
     except Exception as e:
         logger.error(f"Error retrieving growth data {data_id}: {str(e)}")

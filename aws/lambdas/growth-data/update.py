@@ -12,13 +12,13 @@ import os
 # Add shared utilities to path
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'shared'))
 
-from dynamodb_client import dynamodb_client
-from jwt_utils import jwt_validator, extract_token_from_event
+from dynamodb_client import get_dynamodb_client
+from jwt_utils import get_jwt_validator, extract_token_from_event
 from response_utils import (
-    ok_response, bad_request_response, unauthorized_response,
+    success_response, bad_request_response, unauthorized_response,
     not_found_response, internal_error_response, handle_lambda_error
 )
-from validation_utils import GrowthDataValidator, is_valid_uuid
+from validation_utils import GrowthDataValidator, is_valid_uuid, ValidationError
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
@@ -35,6 +35,10 @@ def lambda_handler(event, context):
     Returns:
         dict: HTTP response with updated growth data
     """
+    
+    # Get clients using lazy loading
+    dynamodb_client = get_dynamodb_client()
+    jwt_validator = get_jwt_validator()
     
     # Extract and validate JWT token
     token = extract_token_from_event(event)
@@ -119,12 +123,34 @@ def lambda_handler(event, context):
             return not_found_response("Baby not found")
         
         # Validate the update data
-        validator = GrowthDataValidator(body)
-        validation_result = validator.validate_update()
-        
-        if not validation_result['is_valid']:
-            logger.warning(f"Validation failed: {validation_result['errors']}")
-            return bad_request_response("Validation failed", validation_result['errors'])
+        try:
+            # Validate measurement fields if present
+            measurements = {}
+            measurement_fields = ['weight', 'height', 'headCircumference']
+            
+            for field in measurement_fields:
+                if field in body:
+                    measurements[field] = body[field]
+            
+            if measurements:
+                validated_measurements = GrowthDataValidator.validate_measurements(measurements)
+                # Update body with validated measurements
+                body.update(validated_measurements)
+            
+            # Validate measurement date if present
+            if 'measurementDate' in body:
+                try:
+                    datetime.strptime(body['measurementDate'], '%Y-%m-%d')
+                except ValueError:
+                    logger.warning(f"Invalid measurement date format: {body['measurementDate']}")
+                    return bad_request_response("Invalid measurement date format. Use YYYY-MM-DD")
+            
+        except ValidationError as validation_error:
+            logger.warning(f"Validation failed: {str(validation_error)}")
+            return bad_request_response(f"Validation failed: {str(validation_error)}")
+        except Exception as validation_error:
+            logger.warning(f"Validation failed: {str(validation_error)}")
+            return bad_request_response(f"Validation failed: {str(validation_error)}")
         
         # Prepare update expression and values
         update_expressions = []
@@ -205,7 +231,7 @@ def lambda_handler(event, context):
         
         logger.info(f"Growth data updated successfully: {data_id} for baby {baby_id} by user {user_id}")
         
-        return ok_response(growth_data)
+        return success_response(growth_data)
         
     except Exception as e:
         logger.error(f"Error updating growth data {data_id}: {str(e)}")

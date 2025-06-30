@@ -340,3 +340,21 @@ class GrowthDataValidator:
 def generate_id() -> str:
     """Generate a new UUID for database records."""
     return str(uuid4())
+
+
+def is_valid_uuid(value: str) -> bool:
+    """
+    Check if a string is a valid UUID format.
+    
+    Args:
+        value: String to validate
+        
+    Returns:
+        bool: True if valid UUID, False otherwise
+    """
+    if not value or not isinstance(value, str):
+        return False
+    
+    # Simple UUID pattern validation
+    uuid_pattern = r'^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$'
+    return bool(re.match(uuid_pattern, value))
