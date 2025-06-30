@@ -5,7 +5,7 @@ Tests z-score calculation, percentile conversion, age calculation, etc.
 
 from unittest.mock import patch, Mock
 from .test_base import BasePercentilesTest
-import calculate
+import percentiles_calculate as calculate
 
 class TestPercentilesUtils(BasePercentilesTest):
     """Test cases for utility functions."""

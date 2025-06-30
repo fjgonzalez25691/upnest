@@ -113,7 +113,7 @@ class TestPercentilesCalculate(unittest.TestCase):
         mock_find_lms.return_value = (0.3487, 4.5, 0.13)
         
         # Call the lambda function
-        from calculate import lambda_handler
+        from percentiles_calculate import lambda_handler
         response = lambda_handler(self.weight_request, {})
         
         # Verify response
@@ -158,7 +158,7 @@ class TestPercentilesCalculate(unittest.TestCase):
         mock_find_lms.return_value = (0.3487, 55.2, 0.13)
         
         # Call the lambda function
-        from calculate import lambda_handler
+        from percentiles_calculate import lambda_handler
         response = lambda_handler(self.height_request, {})
         
         # Verify response
@@ -198,7 +198,7 @@ class TestPercentilesCalculate(unittest.TestCase):
         mock_find_lms.return_value = (0.3487, 40.1, 0.13)
         
         # Call the lambda function
-        from calculate import lambda_handler
+        from percentiles_calculate import lambda_handler
         response = lambda_handler(self.head_circ_request, {})
         
         # Verify response
@@ -226,7 +226,7 @@ class TestPercentilesCalculate(unittest.TestCase):
         """Test percentile calculation without authorization token."""
         mock_extract_token.return_value = None
         
-        from calculate import lambda_handler
+        from percentiles_calculate import lambda_handler
         response = lambda_handler(self.weight_request, {})
         
         self.assertEqual(response['statusCode'], 401)
@@ -244,7 +244,7 @@ class TestPercentilesCalculate(unittest.TestCase):
         mock_validator.validate_token.return_value = None
         mock_get_jwt_validator.return_value = mock_validator
         
-        from calculate import lambda_handler
+        from percentiles_calculate import lambda_handler
         response = lambda_handler(self.weight_request, {})
         
         self.assertEqual(response['statusCode'], 401)
@@ -265,7 +265,7 @@ class TestPercentilesCalculate(unittest.TestCase):
                 mock_validator.validate_token.return_value = self.jwt_payload
                 mock_get_jwt_validator.return_value = mock_validator
                 
-                from calculate import lambda_handler
+                from percentiles_calculate import lambda_handler
                 response = lambda_handler(request_without_body, {})
                 
                 self.assertEqual(response['statusCode'], 400)
@@ -287,7 +287,7 @@ class TestPercentilesCalculate(unittest.TestCase):
                 mock_validator.validate_token.return_value = self.jwt_payload
                 mock_get_jwt_validator.return_value = mock_validator
                 
-                from calculate import lambda_handler
+                from percentiles_calculate import lambda_handler
                 response = lambda_handler(request_with_invalid_json, {})
                 
                 self.assertEqual(response['statusCode'], 400)
@@ -313,7 +313,7 @@ class TestPercentilesCalculate(unittest.TestCase):
                 mock_validator.validate_token.return_value = self.jwt_payload
                 mock_get_jwt_validator.return_value = mock_validator
                 
-                from calculate import lambda_handler
+                from percentiles_calculate import lambda_handler
                 response = lambda_handler(request_missing_fields, {})
                 
                 self.assertEqual(response['statusCode'], 400)
@@ -342,7 +342,7 @@ class TestPercentilesCalculate(unittest.TestCase):
                 mock_validator.validate_token.return_value = self.jwt_payload
                 mock_get_jwt_validator.return_value = mock_validator
                 
-                from calculate import lambda_handler
+                from percentiles_calculate import lambda_handler
                 response = lambda_handler(request_invalid_type, {})
                 
                 self.assertEqual(response['statusCode'], 400)
@@ -370,7 +370,7 @@ class TestPercentilesCalculate(unittest.TestCase):
                 mock_validator.validate_token.return_value = self.jwt_payload
                 mock_get_jwt_validator.return_value = mock_validator
                 
-                from calculate import lambda_handler
+                from percentiles_calculate import lambda_handler
                 response = lambda_handler(request_invalid_sex, {})
                 
                 self.assertEqual(response['statusCode'], 400)
@@ -398,7 +398,7 @@ class TestPercentilesCalculate(unittest.TestCase):
                 mock_validator.validate_token.return_value = self.jwt_payload
                 mock_get_jwt_validator.return_value = mock_validator
                 
-                from calculate import lambda_handler
+                from percentiles_calculate import lambda_handler
                 response = lambda_handler(request_negative_value, {})
                 
                 self.assertEqual(response['statusCode'], 400)
@@ -426,7 +426,7 @@ class TestPercentilesCalculate(unittest.TestCase):
                 mock_validator.validate_token.return_value = self.jwt_payload
                 mock_get_jwt_validator.return_value = mock_validator
                 
-                from calculate import lambda_handler
+                from percentiles_calculate import lambda_handler
                 response = lambda_handler(request_future_birth, {})
                 
                 self.assertEqual(response['statusCode'], 400)
@@ -435,7 +435,7 @@ class TestPercentilesCalculate(unittest.TestCase):
     
     def test_calculate_zscore_function(self):
         """Test the z-score calculation function directly."""
-        from calculate import calculate_zscore
+        from percentiles_calculate import percentiles_calculate as calculate_zscore
         
         # Test normal case
         zscore = calculate_zscore(4.5, 0.3487, 4.5, 0.13)
@@ -447,7 +447,7 @@ class TestPercentilesCalculate(unittest.TestCase):
     
     def test_zscore_to_percentile_function(self):
         """Test the z-score to percentile conversion function."""
-        from calculate import zscore_to_percentile
+        from percentiles_calculate import zscore_to_percentile
         
         # Z-score of 0 should give 50th percentile
         percentile = zscore_to_percentile(0.0)
@@ -463,7 +463,7 @@ class TestPercentilesCalculate(unittest.TestCase):
     
     def test_calculate_age_in_days_function(self):
         """Test the age calculation function."""
-        from calculate import calculate_age_in_days
+        from percentiles_calculate import percentiles_calculate as calculate_age_in_days
         
         # Test normal case
         age = calculate_age_in_days('2024-01-15', '2024-04-15')
@@ -479,7 +479,7 @@ class TestPercentilesCalculate(unittest.TestCase):
     
     def test_get_table_info_function(self):
         """Test the table info function."""
-        from calculate import get_table_info
+        from percentiles_calculate import get_table_info
         
         # Test weight table info
         table_dir, filename = get_table_info('weight', 'male')
@@ -506,7 +506,7 @@ class TestPercentilesCalculate(unittest.TestCase):
     
     def test_find_lms_values_function(self):
         """Test the LMS values finding function."""
-        from calculate import find_lms_values
+        from percentiles_calculate import find_lms_values
         import pandas as pd
         
         # Create a real DataFrame for testing

@@ -57,8 +57,8 @@ class TestBabiesDelete(unittest.TestCase):
         """Clean up test environment."""
         self.env_patcher.stop()
     
-    @patch('delete.get_dynamodb_client')
-    @patch('delete.get_jwt_validator')
+    @patch('babies_delete.get_dynamodb_client')
+    @patch('babies_delete.get_jwt_validator')
     def test_delete_baby_success(self, mock_get_jwt_validator, mock_get_dynamodb):
         """Test successful baby soft deletion."""
         # Mock JWT validation
@@ -97,7 +97,7 @@ class TestBabiesDelete(unittest.TestCase):
         self.assertIn('isActive', call_args[1]['update_expression'])
         self.assertFalse(call_args[1]['expression_values'][':is_active'])
     
-    @patch('delete.extract_token_from_event')
+    @patch('babies_delete.extract_token_from_event')
     def test_delete_baby_no_token(self, mock_extract_token):
         """Test baby deletion without authorization token."""
         mock_extract_token.return_value = None
@@ -110,8 +110,8 @@ class TestBabiesDelete(unittest.TestCase):
         body = json.loads(response['body'])
         self.assertFalse(body['success'])
     
-    @patch('delete.get_dynamodb_client')
-    @patch('delete.get_jwt_validator')
+    @patch('babies_delete.get_dynamodb_client')
+    @patch('babies_delete.get_jwt_validator')
     def test_delete_baby_not_found(self, mock_get_jwt_validator, mock_get_dynamodb):
         """Test baby deletion when baby doesn't exist."""
         # Mock JWT validation
@@ -132,8 +132,8 @@ class TestBabiesDelete(unittest.TestCase):
         body = json.loads(response['body'])
         self.assertFalse(body['success'])
     
-    @patch('delete.get_dynamodb_client')
-    @patch('delete.get_jwt_validator')
+    @patch('babies_delete.get_dynamodb_client')
+    @patch('babies_delete.get_jwt_validator')
     def test_delete_baby_unauthorized_access(self, mock_get_jwt_validator, mock_get_dynamodb):
         """Test baby deletion when user doesn't own the baby."""
         # Mock JWT validation with different user
@@ -154,8 +154,8 @@ class TestBabiesDelete(unittest.TestCase):
         body = json.loads(response['body'])
         self.assertFalse(body['success'])
     
-    @patch('delete.get_dynamodb_client')
-    @patch('delete.get_jwt_validator')
+    @patch('babies_delete.get_dynamodb_client')
+    @patch('babies_delete.get_jwt_validator')
     def test_delete_baby_already_deleted(self, mock_get_jwt_validator, mock_get_dynamodb):
         """Test baby deletion when baby is already deleted."""
         # Mock JWT validation
@@ -188,7 +188,7 @@ class TestBabiesDelete(unittest.TestCase):
         }
         
         # Mock JWT validation to pass
-        with patch('delete.get_jwt_validator') as mock_get_jwt_validator:
+        with patch('babies_delete.get_jwt_validator') as mock_get_jwt_validator:
             mock_jwt_validator = MagicMock()
             mock_jwt_validator.extract_user_id.return_value = 'user-1-test-123456'
             mock_get_jwt_validator.return_value = mock_jwt_validator
@@ -202,7 +202,7 @@ class TestBabiesDelete(unittest.TestCase):
             body = json.loads(response['body'])
             self.assertFalse(body['success'])
     
-    @patch('delete.get_jwt_validator')
+    @patch('babies_delete.get_jwt_validator')
     def test_delete_baby_invalid_baby_id(self, mock_get_jwt_validator):
         """Test baby deletion with invalid baby ID format."""
         # Mock JWT validation
@@ -223,8 +223,8 @@ class TestBabiesDelete(unittest.TestCase):
         body = json.loads(response['body'])
         self.assertFalse(body['success'])
     
-    @patch('delete.get_dynamodb_client')
-    @patch('delete.get_jwt_validator')
+    @patch('babies_delete.get_dynamodb_client')
+    @patch('babies_delete.get_jwt_validator')
     def test_delete_baby_dynamodb_error(self, mock_get_jwt_validator, mock_get_dynamodb):
         """Test baby deletion with DynamoDB error."""
         # Mock JWT validation

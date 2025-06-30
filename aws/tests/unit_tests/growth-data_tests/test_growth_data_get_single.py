@@ -17,7 +17,7 @@ shared_path = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'lambdas
 sys.path.insert(0, shared_path)
 
 # Import the module we're testing after setting up paths
-import get_single
+import growth_data_get_single
 
 
 class TestGrowthDataGetSingle(unittest.TestCase):
@@ -492,3 +492,8 @@ class TestGrowthDataGetSingle(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+
+
+
+
+

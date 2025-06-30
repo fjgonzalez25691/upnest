@@ -38,7 +38,7 @@ Resources:
     Properties:
       FunctionName: !Sub upnest-create-baby-${Environment}
       CodeUri: babies/
-      Handler: create.lambda_handler
+      Handler: babies_create.lambda_handler
       Policies:
         - DynamoDBCrudPolicy:
             TableName: !ImportValue UpNest-DynamoDB-dev-BabiesTableName
@@ -54,7 +54,7 @@ Resources:
     Properties:
       FunctionName: !Sub upnest-get-baby-${Environment}
       CodeUri: babies/
-      Handler: get.lambda_handler
+      Handler: babies_get.lambda_handler
       Policies:
         - DynamoDBReadPolicy:
             TableName: !ImportValue UpNest-DynamoDB-dev-BabiesTableName
@@ -70,7 +70,7 @@ Resources:
     Properties:
       FunctionName: !Sub upnest-list-babies-${Environment}
       CodeUri: babies/
-      Handler: list.lambda_handler
+      Handler: babies_list.lambda_handler
       Policies:
         - DynamoDBReadPolicy:
             TableName: !ImportValue UpNest-DynamoDB-dev-BabiesTableName
@@ -86,7 +86,7 @@ Resources:
     Properties:
       FunctionName: !Sub upnest-update-baby-${Environment}
       CodeUri: babies/
-      Handler: update.lambda_handler
+      Handler: babies_update.lambda_handler
       Policies:
         - DynamoDBCrudPolicy:
             TableName: !ImportValue UpNest-DynamoDB-dev-BabiesTableName
@@ -102,7 +102,7 @@ Resources:
     Properties:
       FunctionName: !Sub upnest-delete-baby-${Environment}
       CodeUri: babies/
-      Handler: delete.lambda_handler
+      Handler: babies_delete.lambda_handler
       Policies:
         - DynamoDBCrudPolicy:
             TableName: !ImportValue UpNest-DynamoDB-dev-BabiesTableName
@@ -119,7 +119,7 @@ Resources:
     Properties:
       FunctionName: !Sub upnest-create-growth-data-${Environment}
       CodeUri: growth-data/
-      Handler: create.lambda_handler
+      Handler: growth-data-create.lambda_handler
       Policies:
         - DynamoDBCrudPolicy:
             TableName: !ImportValue UpNest-DynamoDB-dev-GrowthDataTableName
@@ -137,7 +137,7 @@ Resources:
     Properties:
       FunctionName: !Sub upnest-get-growth-data-${Environment}
       CodeUri: growth-data/
-      Handler: get.lambda_handler
+      Handler: growth-data-get.lambda_handler
       Policies:
         - DynamoDBReadPolicy:
             TableName: !ImportValue UpNest-DynamoDB-dev-GrowthDataTableName
@@ -155,7 +155,7 @@ Resources:
     Properties:
       FunctionName: !Sub upnest-get-single-growth-data-${Environment}
       CodeUri: growth-data/
-      Handler: get_single.lambda_handler
+      Handler: growth-data-get-single.lambda_handler
       Policies:
         - DynamoDBReadPolicy:
             TableName: !ImportValue UpNest-DynamoDB-dev-GrowthDataTableName
@@ -173,7 +173,7 @@ Resources:
     Properties:
       FunctionName: !Sub upnest-list-growth-data-${Environment}
       CodeUri: growth-data/
-      Handler: list.lambda_handler
+      Handler: growth-data-list.lambda_handler
       Policies:
         - DynamoDBReadPolicy:
             TableName: !ImportValue UpNest-DynamoDB-dev-GrowthDataTableName
@@ -191,7 +191,7 @@ Resources:
     Properties:
       FunctionName: !Sub upnest-update-growth-data-${Environment}
       CodeUri: growth-data/
-      Handler: update.lambda_handler
+      Handler: growth-data-update.lambda_handler
       Policies:
         - DynamoDBCrudPolicy:
             TableName: !ImportValue UpNest-DynamoDB-dev-GrowthDataTableName
@@ -209,7 +209,7 @@ Resources:
     Properties:
       FunctionName: !Sub upnest-delete-growth-data-${Environment}
       CodeUri: growth-data/
-      Handler: delete.lambda_handler
+      Handler: growth-data-delete.lambda_handler
       Policies:
         - DynamoDBCrudPolicy:
             TableName: !ImportValue UpNest-DynamoDB-dev-GrowthDataTableName
@@ -228,7 +228,7 @@ Resources:
     Properties:
       FunctionName: !Sub upnest-calculate-percentiles-${Environment}
       CodeUri: percentiles/
-      Handler: calculate.lambda_handler
+      Handler: percentiles_calculate.lambda_handler
       Policies:
         - DynamoDBReadPolicy:
             TableName: !ImportValue UpNest-DynamoDB-dev-GrowthDataTableName

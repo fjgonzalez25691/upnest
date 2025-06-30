@@ -69,8 +69,8 @@ class TestBabiesList(unittest.TestCase):
         """Clean up test environment."""
         self.env_patcher.stop()
     
-    @patch('list.get_dynamodb_client')
-    @patch('list.get_jwt_validator')
+    @patch('babies_list.get_dynamodb_client')
+    @patch('babies_list.get_jwt_validator')
     def test_list_babies_success(self, mock_get_jwt_validator, mock_get_dynamodb):
         """Test successful babies listing."""
         # Mock JWT validation
@@ -95,8 +95,8 @@ class TestBabiesList(unittest.TestCase):
         self.assertEqual(body['data'][0]['babyId'], 'baby-123')
         self.assertEqual(body['data'][1]['babyId'], 'baby-456')
     
-    @patch('list.get_dynamodb_client')
-    @patch('list.get_jwt_validator')
+    @patch('babies_list.get_dynamodb_client')
+    @patch('babies_list.get_jwt_validator')
     def test_list_babies_empty_result(self, mock_get_jwt_validator, mock_get_dynamodb):
         """Test babies listing when user has no babies."""
         # Mock JWT validation
@@ -119,7 +119,7 @@ class TestBabiesList(unittest.TestCase):
         self.assertEqual(len(body['data']), 0)
         self.assertEqual(body['data'], [])
     
-    @patch('list.extract_token_from_event')
+    @patch('babies_list.extract_token_from_event')
     def test_list_babies_no_token(self, mock_extract_token):
         """Test babies listing without authorization token."""
         mock_extract_token.return_value = None
@@ -132,8 +132,8 @@ class TestBabiesList(unittest.TestCase):
         body = json.loads(response['body'])
         self.assertFalse(body['success'])
     
-    @patch('list.get_dynamodb_client')
-    @patch('list.get_jwt_validator')
+    @patch('babies_list.get_dynamodb_client')
+    @patch('babies_list.get_jwt_validator')
     def test_list_babies_with_pagination(self, mock_get_jwt_validator, mock_get_dynamodb):
         """Test babies listing with pagination parameters."""
         # Mock JWT validation
@@ -171,8 +171,8 @@ class TestBabiesList(unittest.TestCase):
         call_args = mock_dynamodb.query_gsi.call_args
         self.assertEqual(call_args.kwargs['limit'], 1)
     
-    @patch('list.get_dynamodb_client')
-    @patch('list.get_jwt_validator')
+    @patch('babies_list.get_dynamodb_client')
+    @patch('babies_list.get_jwt_validator')
     def test_list_babies_active_only(self, mock_get_jwt_validator, mock_get_dynamodb):
         """Test babies listing filters active babies only."""
         # Mock JWT validation
@@ -204,8 +204,8 @@ class TestBabiesList(unittest.TestCase):
         for baby in body['data']:
             self.assertTrue(baby.get('isActive', True))
     
-    @patch('list.get_dynamodb_client')
-    @patch('list.get_jwt_validator')
+    @patch('babies_list.get_dynamodb_client')
+    @patch('babies_list.get_jwt_validator')
     def test_list_babies_dynamodb_error(self, mock_get_jwt_validator, mock_get_dynamodb):
         """Test babies listing with DynamoDB error."""
         # Mock JWT validation

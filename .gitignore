@@ -71,3 +71,7 @@ Thumbs.db
 
 # Ignore folder trello-cards
 trello-cards/
+
+# Ignore auto-generated test directories by VS Code
+aws/tests/unit/
+aws/tests/unit_tests/percentiles_test/

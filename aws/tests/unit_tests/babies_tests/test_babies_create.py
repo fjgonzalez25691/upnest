@@ -17,6 +17,9 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', '..', '..', 'la
 from jwt_utils import get_jwt_validator, extract_token_from_event
 from dynamodb_client import get_dynamodb_client
 
+# Import lambda function 
+import babies_create
+
 class TestBabiesCreate(unittest.TestCase):
     """Test cases for babies create Lambda function."""
     
@@ -52,8 +55,8 @@ class TestBabiesCreate(unittest.TestCase):
         """Clean up test environment."""
         self.env_patcher.stop()
     
-    @patch('create.get_dynamodb_client')
-    @patch('create.get_jwt_validator')
+    @patch('babies_create.get_dynamodb_client')
+    @patch('babies_create.get_jwt_validator')
     def test_create_baby_success(self, mock_get_jwt_validator, mock_get_dynamodb):
         """Test successful baby creation."""
         # Mock JWT validation
@@ -66,30 +69,26 @@ class TestBabiesCreate(unittest.TestCase):
         mock_dynamodb.put_item.return_value = True
         mock_get_dynamodb.return_value = mock_dynamodb
         
-        # Import the handler after mocking
-        from create import lambda_handler
-        
-        response = lambda_handler(self.sample_event, {})
+        # Use the imported handler 
+        response = babies_create.lambda_handler(self.sample_event, {})
         
         self.assertEqual(response['statusCode'], 201)
         body = json.loads(response['body'])
         self.assertTrue(body['success'])
         self.assertIn('babyId', body['data'])
     
-    @patch('create.extract_token_from_event')
+    @patch('babies_create.extract_token_from_event')
     def test_create_baby_no_token(self, mock_extract_token):
         """Test baby creation without authorization token."""
         mock_extract_token.return_value = None
         
-        from create import lambda_handler
-        
-        response = lambda_handler(self.sample_event, {})
+        response = babies_create.lambda_handler(self.sample_event, {})
         
         self.assertEqual(response['statusCode'], 401)
         body = json.loads(response['body'])
         self.assertFalse(body['success'])
     
-    @patch('create.get_jwt_validator')
+    @patch('babies_create.get_jwt_validator')
     def test_create_baby_invalid_json(self, mock_get_jwt_validator):
         """Test baby creation with invalid JSON."""
         # Mock JWT validation to pass
@@ -102,16 +101,14 @@ class TestBabiesCreate(unittest.TestCase):
             'body': 'invalid-json'
         }
         
-        from create import lambda_handler
-        
-        response = lambda_handler(invalid_event, {})
+        response = babies_create.lambda_handler(invalid_event, {})
         
         self.assertEqual(response['statusCode'], 400)
         body = json.loads(response['body'])
         self.assertFalse(body['success'])
     
-    @patch('create.get_dynamodb_client')
-    @patch('create.get_jwt_validator')
+    @patch('babies_create.get_dynamodb_client')
+    @patch('babies_create.get_jwt_validator')
     def test_create_baby_validation_error(self, mock_get_jwt_validator, mock_get_dynamodb):
         """Test baby creation with validation errors."""
         # Mock JWT validation
@@ -134,8 +131,8 @@ class TestBabiesCreate(unittest.TestCase):
         body = json.loads(response['body'])
         self.assertFalse(body['success'])
     
-    @patch('create.get_dynamodb_client')
-    @patch('create.get_jwt_validator')
+    @patch('babies_create.get_dynamodb_client')
+    @patch('babies_create.get_jwt_validator')
     def test_create_baby_dynamodb_error(self, mock_get_jwt_validator, mock_get_dynamodb):
         """Test baby creation with DynamoDB error."""
         # Mock JWT validation

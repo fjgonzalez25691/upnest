@@ -51,7 +51,7 @@ Resources:
     Properties:
       FunctionName: upnest-create-baby-local
       CodeUri: babies/
-      Handler: create.lambda_handler
+      Handler: babies_create.lambda_handler
       Events:
         CreateBaby:
           Type: Api
@@ -65,7 +65,7 @@ Resources:
     Properties:
       FunctionName: upnest-get-baby-local
       CodeUri: babies/
-      Handler: get.lambda_handler
+      Handler: babies_get.lambda_handler
       Events:
         GetBaby:
           Type: Api
@@ -79,7 +79,7 @@ Resources:
     Properties:
       FunctionName: upnest-list-babies-local
       CodeUri: babies/
-      Handler: list.lambda_handler
+      Handler: babies_list.lambda_handler
       Events:
         ListBabies:
           Type: Api
@@ -93,7 +93,7 @@ Resources:
     Properties:
       FunctionName: upnest-update-baby-local
       CodeUri: babies/
-      Handler: update.lambda_handler
+      Handler: babies_update.lambda_handler
       Events:
         UpdateBaby:
           Type: Api
@@ -107,7 +107,7 @@ Resources:
     Properties:
       FunctionName: upnest-delete-baby-local
       CodeUri: babies/
-      Handler: delete.lambda_handler
+      Handler: babies_delete.lambda_handler
       Events:
         DeleteBaby:
           Type: Api
@@ -122,7 +122,7 @@ Resources:
     Properties:
       FunctionName: upnest-create-growth-data-local
       CodeUri: growth-data/
-      Handler: create.lambda_handler
+      Handler: growth-data-create.lambda_handler
       Events:
         CreateGrowthData:
           Type: Api
@@ -136,7 +136,7 @@ Resources:
     Properties:
       FunctionName: upnest-get-growth-data-local
       CodeUri: growth-data/
-      Handler: get.lambda_handler
+      Handler: growth-data-get.lambda_handler
       Events:
         GetGrowthData:
           Type: Api
@@ -150,7 +150,7 @@ Resources:
     Properties:
       FunctionName: upnest-list-growth-data-local
       CodeUri: growth-data/
-      Handler: list.lambda_handler
+      Handler: growth-data-list.lambda_handler
       Events:
         ListGrowthData:
           Type: Api
@@ -164,7 +164,7 @@ Resources:
     Properties:
       FunctionName: upnest-update-growth-data-local
       CodeUri: growth-data/
-      Handler: update.lambda_handler
+      Handler: growth-data-update.lambda_handler
       Events:
         UpdateGrowthData:
           Type: Api
@@ -178,7 +178,7 @@ Resources:
     Properties:
       FunctionName: upnest-delete-growth-data-local
       CodeUri: growth-data/
-      Handler: delete.lambda_handler
+      Handler: growth-data-delete.lambda_handler
       Events:
         DeleteGrowthData:
           Type: Api

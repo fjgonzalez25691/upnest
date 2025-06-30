@@ -16,7 +16,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', '..', '..', 'la
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', '..', '..', 'lambdas', 'shared'))
 
 # Import the module we're testing after setting up paths
-import list as growth_list
+import growth_data_list as growth_list
 
 class TestGrowthDataList(unittest.TestCase):
     """Test cases for growth data list Lambda function."""
@@ -85,8 +85,8 @@ class TestGrowthDataList(unittest.TestCase):
         """Clean up test environment."""
         self.env_patcher.stop()
     
-    @patch.object(growth_list, 'get_dynamodb_client')
-    @patch.object(growth_list, 'get_jwt_validator')
+    @patch('growth_data_list.get_dynamodb_client')
+    @patch('growth_data_list.get_jwt_validator')
     def test_list_growth_data_success(self, mock_get_jwt_validator, mock_get_dynamodb):
         """Test successful growth data listing."""
         # Mock JWT validation
@@ -102,7 +102,7 @@ class TestGrowthDataList(unittest.TestCase):
         mock_dynamodb.query_items.return_value = self.sample_growth_data
         mock_get_dynamodb.return_value = mock_dynamodb
         
-        from list import lambda_handler
+        from growth_data_list import lambda_handler
         
         response = lambda_handler(self.sample_event, {})
         
@@ -122,7 +122,7 @@ class TestGrowthDataList(unittest.TestCase):
         """Test growth data listing without authorization token."""
         mock_extract_token.return_value = None
         
-        from list import lambda_handler
+        from growth_data_list import lambda_handler
         
         response = lambda_handler(self.sample_event, {})
         
@@ -130,8 +130,8 @@ class TestGrowthDataList(unittest.TestCase):
         body = json.loads(response['body'])
         self.assertFalse(body['success'])
     
-    @patch.object(growth_list, 'get_dynamodb_client')
-    @patch.object(growth_list, 'get_jwt_validator')
+    @patch('growth_data_list.get_dynamodb_client')
+    @patch('growth_data_list.get_jwt_validator')
     def test_list_growth_data_baby_not_found(self, mock_get_jwt_validator, mock_get_dynamodb):
         """Test growth data listing when baby doesn't exist."""
         # Mock JWT validation
@@ -145,7 +145,7 @@ class TestGrowthDataList(unittest.TestCase):
         mock_dynamodb.get_item.return_value = None
         mock_get_dynamodb.return_value = mock_dynamodb
         
-        from list import lambda_handler
+        from growth_data_list import lambda_handler
         
         response = lambda_handler(self.sample_event, {})
         
@@ -153,8 +153,8 @@ class TestGrowthDataList(unittest.TestCase):
         body = json.loads(response['body'])
         self.assertFalse(body['success'])
     
-    @patch.object(growth_list, 'get_dynamodb_client')
-    @patch.object(growth_list, 'get_jwt_validator')
+    @patch('growth_data_list.get_dynamodb_client')
+    @patch('growth_data_list.get_jwt_validator')
     def test_list_growth_data_unauthorized_baby(self, mock_get_jwt_validator, mock_get_dynamodb):
         """Test growth data listing for baby owned by different user."""
         # Mock JWT validation
@@ -169,7 +169,7 @@ class TestGrowthDataList(unittest.TestCase):
         mock_dynamodb.get_item.return_value = different_user_baby
         mock_get_dynamodb.return_value = mock_dynamodb
         
-        from list import lambda_handler
+        from growth_data_list import lambda_handler
         
         response = lambda_handler(self.sample_event, {})
         
@@ -177,8 +177,8 @@ class TestGrowthDataList(unittest.TestCase):
         body = json.loads(response['body'])
         self.assertFalse(body['success'])
     
-    @patch.object(growth_list, 'get_dynamodb_client')
-    @patch.object(growth_list, 'get_jwt_validator')
+    @patch('growth_data_list.get_dynamodb_client')
+    @patch('growth_data_list.get_jwt_validator')
     def test_list_growth_data_empty_result(self, mock_get_jwt_validator, mock_get_dynamodb):
         """Test growth data listing with no data."""
         # Mock JWT validation
@@ -194,7 +194,7 @@ class TestGrowthDataList(unittest.TestCase):
         mock_dynamodb.query_items.return_value = []
         mock_get_dynamodb.return_value = mock_dynamodb
         
-        from list import lambda_handler
+        from growth_data_list import lambda_handler
         
         response = lambda_handler(self.sample_event, {})
         
@@ -213,12 +213,12 @@ class TestGrowthDataList(unittest.TestCase):
         }
         
         # Mock JWT validation to pass
-        with patch.object(growth_list, 'get_jwt_validator') as mock_get_jwt_validator:
+        with patch('growth_data_list.get_jwt_validator') as mock_get_jwt_validator:
             mock_jwt_validator = MagicMock()
             mock_jwt_validator.extract_user_id.return_value = 'user-1-test-123456'
             mock_get_jwt_validator.return_value = mock_jwt_validator
             
-            from list import lambda_handler
+            from growth_data_list import lambda_handler
             
             response = lambda_handler(event_no_baby_id, {})
             
@@ -227,8 +227,8 @@ class TestGrowthDataList(unittest.TestCase):
             body = json.loads(response['body'])
             self.assertFalse(body['success'])
     
-    @patch.object(growth_list, 'get_dynamodb_client')
-    @patch.object(growth_list, 'get_jwt_validator')
+    @patch('growth_data_list.get_dynamodb_client')
+    @patch('growth_data_list.get_jwt_validator')
     def test_list_growth_data_dynamodb_error(self, mock_get_jwt_validator, mock_get_dynamodb):
         """Test growth data listing with DynamoDB error."""
         # Mock JWT validation
@@ -241,7 +241,7 @@ class TestGrowthDataList(unittest.TestCase):
         mock_dynamodb.get_item.side_effect = Exception("DynamoDB error")
         mock_get_dynamodb.return_value = mock_dynamodb
         
-        from list import lambda_handler
+        from growth_data_list import lambda_handler
         
         response = lambda_handler(self.sample_event, {})
         
@@ -252,3 +252,8 @@ class TestGrowthDataList(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+
+
+
+
+

@@ -6,7 +6,7 @@ Tests weight, height, and head circumference calculations.
 from unittest.mock import patch, Mock
 import json
 from .test_base import BasePercentilesTest
-import calculate
+import percentiles_calculate as calculate
 
 class TestPercentilesSuccess(BasePercentilesTest):
     """Test cases for successful percentile calculations."""

@@ -6,7 +6,7 @@ Tests invalid input data, missing fields, invalid formats, etc.
 from unittest.mock import patch, Mock
 import json
 from .test_base import BasePercentilesTest
-import calculate
+import percentiles_calculate as calculate
 
 class TestPercentilesValidation(BasePercentilesTest):
     """Test cases for input data validation."""

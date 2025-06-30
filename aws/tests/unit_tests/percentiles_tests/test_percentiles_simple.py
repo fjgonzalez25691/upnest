@@ -76,7 +76,7 @@ class TestPercentilesSimple(unittest.TestCase):
         mock_find_lms.return_value = (0.3487, 4.5, 0.13)
         
         # Call the lambda function
-        from calculate import lambda_handler
+        from percentiles_calculate import lambda_handler
         response = lambda_handler(self.weight_request, {})
         
         # Verify response
@@ -104,7 +104,7 @@ class TestPercentilesSimple(unittest.TestCase):
         """Test percentile calculation without authorization token."""
         mock_extract_token.return_value = None
         
-        from calculate import lambda_handler
+        from percentiles_calculate import lambda_handler
         response = lambda_handler(self.weight_request, {})
         
         self.assertEqual(response['statusCode'], 401)
@@ -126,7 +126,7 @@ class TestPercentilesSimple(unittest.TestCase):
                 mock_validator.validate_token.return_value = self.jwt_payload
                 mock_get_jwt_validator.return_value = mock_validator
                 
-                from calculate import lambda_handler
+                from percentiles_calculate import lambda_handler
                 response = lambda_handler(request_without_body, {})
                 
                 self.assertEqual(response['statusCode'], 400)
@@ -148,7 +148,7 @@ class TestPercentilesSimple(unittest.TestCase):
                 mock_validator.validate_token.return_value = self.jwt_payload
                 mock_get_jwt_validator.return_value = mock_validator
                 
-                from calculate import lambda_handler
+                from percentiles_calculate import lambda_handler
                 response = lambda_handler(request_with_invalid_json, {})
                 
                 self.assertEqual(response['statusCode'], 400)

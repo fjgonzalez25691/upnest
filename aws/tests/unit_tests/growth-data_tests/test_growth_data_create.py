@@ -15,8 +15,8 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', '..', '..', 'la
 # Also add shared for imports
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', '..', '..', 'lambdas', 'shared'))
 
-# Import the module we're testing after setting up paths
-import create
+# Import the module we're testing after setting up paths - use unique alias
+import growth_data_create as growth_create
 
 class TestGrowthDataCreate(unittest.TestCase):
     """Test cases for growth data create Lambda function."""
@@ -66,8 +66,8 @@ class TestGrowthDataCreate(unittest.TestCase):
         """Clean up test environment."""
         self.env_patcher.stop()
     
-    @patch.object(create, 'get_dynamodb_client')
-    @patch.object(create, 'get_jwt_validator')
+    @patch('growth_data_create.'))
+    @patch('growth_data_create.'))
     def test_create_growth_data_success(self, mock_get_jwt_validator, mock_get_dynamodb):
         """Test successful growth data creation."""
         # Mock JWT validation
@@ -83,7 +83,7 @@ class TestGrowthDataCreate(unittest.TestCase):
         mock_dynamodb.put_item.return_value = True
         mock_get_dynamodb.return_value = mock_dynamodb
         
-        from create import lambda_handler
+        from growth_data_create import lambda_handler
         
         response = lambda_handler(self.sample_event, {})
         
@@ -97,12 +97,12 @@ class TestGrowthDataCreate(unittest.TestCase):
         self.assertTrue(body['success'])
         self.assertIn('dataId', body['data'])
     
-    @patch.object(create, 'extract_token_from_event')
+    @patch('growth_data_create.'))
     def test_create_growth_data_no_token(self, mock_extract_token):
         """Test growth data creation without authorization token."""
         mock_extract_token.return_value = None
         
-        from create import lambda_handler
+        from growth_data_create import lambda_handler
         
         response = lambda_handler(self.sample_event, {})
         
@@ -118,12 +118,12 @@ class TestGrowthDataCreate(unittest.TestCase):
         }
         
         # Mock JWT validation to pass
-        with patch.object(create, 'get_jwt_validator') as mock_get_jwt_validator:
+        with patch('growth_data_create.get_jwt_validator') as mock_get_jwt_validator:
             mock_jwt_validator = MagicMock()
             mock_jwt_validator.extract_user_id.return_value = 'user-1-test-123456'
             mock_get_jwt_validator.return_value = mock_jwt_validator
             
-            from create import lambda_handler
+            from growth_data_create import lambda_handler
             
             response = lambda_handler(invalid_event, {})
             
@@ -131,8 +131,8 @@ class TestGrowthDataCreate(unittest.TestCase):
             body = json.loads(response['body'])
             self.assertFalse(body['success'])
     
-    @patch.object(create, 'get_dynamodb_client')
-    @patch.object(create, 'get_jwt_validator')
+    @patch('growth_data_create.'))
+    @patch('growth_data_create.'))
     def test_create_growth_data_baby_not_found(self, mock_get_jwt_validator, mock_get_dynamodb):
         """Test growth data creation when baby doesn't exist."""
         # Mock JWT validation
@@ -146,7 +146,7 @@ class TestGrowthDataCreate(unittest.TestCase):
         mock_dynamodb.get_item.return_value = None
         mock_get_dynamodb.return_value = mock_dynamodb
         
-        from create import lambda_handler
+        from growth_data_create import lambda_handler
         
         response = lambda_handler(self.sample_event, {})
         
@@ -154,8 +154,8 @@ class TestGrowthDataCreate(unittest.TestCase):
         body = json.loads(response['body'])
         self.assertFalse(body['success'])
     
-    @patch.object(create, 'get_dynamodb_client')
-    @patch.object(create, 'get_jwt_validator')
+    @patch('growth_data_create.'))
+    @patch('growth_data_create.'))
     def test_create_growth_data_unauthorized_baby(self, mock_get_jwt_validator, mock_get_dynamodb):
         """Test growth data creation for baby owned by different user."""
         # Mock JWT validation
@@ -170,7 +170,7 @@ class TestGrowthDataCreate(unittest.TestCase):
         mock_dynamodb.get_item.return_value = different_user_baby
         mock_get_dynamodb.return_value = mock_dynamodb
         
-        from create import lambda_handler
+        from growth_data_create import lambda_handler
         
         response = lambda_handler(self.sample_event, {})
         
@@ -178,8 +178,8 @@ class TestGrowthDataCreate(unittest.TestCase):
         body = json.loads(response['body'])
         self.assertFalse(body['success'])
     
-    @patch.object(create, 'get_dynamodb_client')
-    @patch.object(create, 'get_jwt_validator')
+    @patch('growth_data_create.'))
+    @patch('growth_data_create.'))
     def test_create_growth_data_validation_error(self, mock_get_jwt_validator, mock_get_dynamodb):
         """Test growth data creation with validation errors."""
         # Mock JWT validation
@@ -205,7 +205,7 @@ class TestGrowthDataCreate(unittest.TestCase):
             'body': json.dumps(invalid_data)
         }
         
-        from create import lambda_handler
+        from growth_data_create import lambda_handler
         
         response = lambda_handler(invalid_event, {})
         
@@ -213,8 +213,8 @@ class TestGrowthDataCreate(unittest.TestCase):
         body = json.loads(response['body'])
         self.assertFalse(body['success'])
     
-    @patch.object(create, 'get_dynamodb_client')
-    @patch.object(create, 'get_jwt_validator')
+    @patch('growth_data_create.'))
+    @patch('growth_data_create.'))
     def test_create_growth_data_dynamodb_error(self, mock_get_jwt_validator, mock_get_dynamodb):
         """Test growth data creation with DynamoDB error."""
         # Mock JWT validation
@@ -227,7 +227,7 @@ class TestGrowthDataCreate(unittest.TestCase):
         mock_dynamodb.get_item.side_effect = Exception("DynamoDB error")
         mock_get_dynamodb.return_value = mock_dynamodb
         
-        from create import lambda_handler
+        from growth_data_create import lambda_handler
         
         response = lambda_handler(self.sample_event, {})
         
@@ -238,3 +238,8 @@ class TestGrowthDataCreate(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+
+
+
+
+

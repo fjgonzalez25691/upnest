@@ -65,8 +65,8 @@ class TestBabiesUpdate(unittest.TestCase):
         """Clean up test environment."""
         self.env_patcher.stop()
     
-    @patch('update.get_dynamodb_client')
-    @patch('update.get_jwt_validator')
+    @patch('babies_update.get_dynamodb_client')
+    @patch('babies_update.get_jwt_validator')
     def test_update_baby_success(self, mock_get_jwt_validator, mock_get_dynamodb):
         """Test successful baby update."""
         # Mock JWT validation
@@ -99,7 +99,7 @@ class TestBabiesUpdate(unittest.TestCase):
         self.assertEqual(body['data']['name'], 'Emma Updated')
         self.assertEqual(body['data']['birthWeight'], 3.3)
     
-    @patch('update.extract_token_from_event')
+    @patch('babies_update.extract_token_from_event')
     def test_update_baby_no_token(self, mock_extract_token):
         """Test baby update without authorization token."""
         mock_extract_token.return_value = None
@@ -112,8 +112,8 @@ class TestBabiesUpdate(unittest.TestCase):
         body = json.loads(response['body'])
         self.assertFalse(body['success'])
     
-    @patch('update.get_dynamodb_client')
-    @patch('update.get_jwt_validator')
+    @patch('babies_update.get_dynamodb_client')
+    @patch('babies_update.get_jwt_validator')
     def test_update_baby_not_found(self, mock_get_jwt_validator, mock_get_dynamodb):
         """Test baby update when baby doesn't exist."""
         # Mock JWT validation
@@ -134,8 +134,8 @@ class TestBabiesUpdate(unittest.TestCase):
         body = json.loads(response['body'])
         self.assertFalse(body['success'])
     
-    @patch('update.get_dynamodb_client')
-    @patch('update.get_jwt_validator')
+    @patch('babies_update.get_dynamodb_client')
+    @patch('babies_update.get_jwt_validator')
     def test_update_baby_unauthorized_access(self, mock_get_jwt_validator, mock_get_dynamodb):
         """Test baby update when user doesn't own the baby."""
         # Mock JWT validation with different user
@@ -156,7 +156,7 @@ class TestBabiesUpdate(unittest.TestCase):
         body = json.loads(response['body'])
         self.assertFalse(body['success'])
     
-    @patch('update.get_jwt_validator')
+    @patch('babies_update.get_jwt_validator')
     def test_update_baby_invalid_json(self, mock_get_jwt_validator):
         """Test baby update with invalid JSON."""
         # Mock JWT validation to pass
@@ -178,8 +178,8 @@ class TestBabiesUpdate(unittest.TestCase):
         body = json.loads(response['body'])
         self.assertFalse(body['success'])
     
-    @patch('update.get_dynamodb_client')
-    @patch('update.get_jwt_validator')
+    @patch('babies_update.get_dynamodb_client')
+    @patch('babies_update.get_jwt_validator')
     def test_update_baby_validation_error(self, mock_get_jwt_validator, mock_get_dynamodb):
         """Test baby update with validation errors."""
         # Mock JWT validation
@@ -222,7 +222,7 @@ class TestBabiesUpdate(unittest.TestCase):
         }
         
         # Mock JWT validation to pass
-        with patch('update.get_jwt_validator') as mock_get_jwt_validator:
+        with patch('babies_update.get_jwt_validator') as mock_get_jwt_validator:
             mock_jwt_validator = MagicMock()
             mock_jwt_validator.extract_user_id.return_value = 'user-1-test-123456'
             mock_get_jwt_validator.return_value = mock_jwt_validator
@@ -236,8 +236,8 @@ class TestBabiesUpdate(unittest.TestCase):
             body = json.loads(response['body'])
             self.assertFalse(body['success'])
     
-    @patch('update.get_dynamodb_client')
-    @patch('update.get_jwt_validator')
+    @patch('babies_update.get_dynamodb_client')
+    @patch('babies_update.get_jwt_validator')
     def test_update_baby_dynamodb_error(self, mock_get_jwt_validator, mock_get_dynamodb):
         """Test baby update with DynamoDB error."""
         # Mock JWT validation

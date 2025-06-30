@@ -17,8 +17,8 @@ sys.path.insert(0, percentiles_path)
 shared_path = r"d:\proyectos\AWSLambdaHackathon\upnest\aws\lambdas\shared"
 sys.path.insert(0, shared_path)
 
-# Import calculate module directly
-import calculate
+# import percentiles_calculate as calculate module directly
+import percentiles_calculate as calculate
 
 class BasePercentilesTest(unittest.TestCase):
     """Base test class with common setup for percentiles tests."""

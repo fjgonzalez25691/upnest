@@ -17,7 +17,7 @@ shared_path = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'lambdas
 sys.path.insert(0, shared_path)
 
 # Import the module we're testing after setting up paths
-import delete
+import growth_data_delete
 
 
 class TestGrowthDataDelete(unittest.TestCase):
@@ -433,3 +433,8 @@ class TestGrowthDataDelete(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+
+
+
+
+
