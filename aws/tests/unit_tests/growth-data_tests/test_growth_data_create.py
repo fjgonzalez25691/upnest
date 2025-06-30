@@ -66,9 +66,9 @@ class TestGrowthDataCreate(unittest.TestCase):
         """Clean up test environment."""
         self.env_patcher.stop()
     
-    @patch('growth_data_create.'))
-    @patch('growth_data_create.'))
-    def test_create_growth_data_success(self, mock_get_jwt_validator, mock_get_dynamodb):
+    @patch('growth_data_create.get_jwt_validator')
+    @patch('growth_data_create.get_dynamodb')
+    def test_create_growth_data_success(self, mock_get_dynamodb, mock_get_jwt_validator):
         """Test successful growth data creation."""
         # Mock JWT validation
         mock_jwt_validator = MagicMock()
@@ -97,10 +97,13 @@ class TestGrowthDataCreate(unittest.TestCase):
         self.assertTrue(body['success'])
         self.assertIn('dataId', body['data'])
     
-    @patch('growth_data_create.'))
-    def test_create_growth_data_no_token(self, mock_extract_token):
+    @patch('growth_data_create.get_jwt_validator')
+    def test_create_growth_data_no_token(self, mock_get_jwt_validator):
         """Test growth data creation without authorization token."""
-        mock_extract_token.return_value = None
+        # Mock JWT validator to return None (no token)
+        mock_jwt_validator = MagicMock()
+        mock_jwt_validator.extract_user_id.return_value = None
+        mock_get_jwt_validator.return_value = mock_jwt_validator
         
         from growth_data_create import lambda_handler
         
