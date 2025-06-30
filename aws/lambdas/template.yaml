@@ -1,4 +1,4 @@
-AWSTemplateFormatVersion: '2010-09-09'
+﻿AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
 Description: >
   UpNest Lambda Functions - Baby CRUD API and Percentile Calculations
@@ -10,12 +10,12 @@ Globals:
     Runtime: python3.11
     Environment:
       Variables:
-        # DynamoDB Table Names (imported from CloudFormation)
-        USERS_TABLE: !ImportValue UpNest-DynamoDB-dev-UsersTableName
-        BABIES_TABLE: !ImportValue UpNest-DynamoDB-dev-BabiesTableName
-        GROWTH_DATA_TABLE: !ImportValue UpNest-DynamoDB-dev-GrowthDataTableName
-        VACCINATIONS_TABLE: !ImportValue UpNest-DynamoDB-dev-VaccinationsTableName
-        MILESTONES_TABLE: !ImportValue UpNest-DynamoDB-dev-MilestonesTableName
+        # DynamoDB Table Names (direct values for hackathon)
+        USERS_TABLE: UpNest-Users-dev
+        BABIES_TABLE: UpNest-Babies-dev
+        GROWTH_DATA_TABLE: UpNest-GrowthData-dev
+        VACCINATIONS_TABLE: UpNest-Vaccinations-dev
+        MILESTONES_TABLE: UpNest-Milestones-dev
         
         # Cognito Configuration
         COGNITO_USER_POOL_ID: eu-south-2_WInbcDDjo
@@ -36,12 +36,12 @@ Resources:
   CreateBabyFunction:
     Type: AWS::Serverless::Function
     Properties:
-      FunctionName: !Sub upnest-create-baby-${Environment}
+      FunctionName: upnest-create-baby-hackathon
       CodeUri: babies/
       Handler: babies_create.lambda_handler
       Policies:
         - DynamoDBCrudPolicy:
-            TableName: !ImportValue UpNest-DynamoDB-dev-BabiesTableName
+            TableName: UpNest-Babies-dev
       Events:
         CreateBaby:
           Type: Api
@@ -52,12 +52,12 @@ Resources:
   GetBabyFunction:
     Type: AWS::Serverless::Function
     Properties:
-      FunctionName: !Sub upnest-get-baby-${Environment}
+      FunctionName: upnest-get-baby-hackathon
       CodeUri: babies/
       Handler: babies_get.lambda_handler
       Policies:
         - DynamoDBReadPolicy:
-            TableName: !ImportValue UpNest-DynamoDB-dev-BabiesTableName
+            TableName: UpNest-Babies-dev
       Events:
         GetBaby:
           Type: Api
@@ -73,7 +73,7 @@ Resources:
       Handler: babies_list.lambda_handler
       Policies:
         - DynamoDBReadPolicy:
-            TableName: !ImportValue UpNest-DynamoDB-dev-BabiesTableName
+            TableName: UpNest-Babies-dev
       Events:
         ListBabies:
           Type: Api
@@ -89,7 +89,7 @@ Resources:
       Handler: babies_update.lambda_handler
       Policies:
         - DynamoDBCrudPolicy:
-            TableName: !ImportValue UpNest-DynamoDB-dev-BabiesTableName
+            TableName: UpNest-Babies-dev
       Events:
         UpdateBaby:
           Type: Api
@@ -105,7 +105,7 @@ Resources:
       Handler: babies_delete.lambda_handler
       Policies:
         - DynamoDBCrudPolicy:
-            TableName: !ImportValue UpNest-DynamoDB-dev-BabiesTableName
+            TableName: UpNest-Babies-dev
       Events:
         DeleteBaby:
           Type: Api
@@ -122,9 +122,9 @@ Resources:
       Handler: growth-data-create.lambda_handler
       Policies:
         - DynamoDBCrudPolicy:
-            TableName: !ImportValue UpNest-DynamoDB-dev-GrowthDataTableName
+            TableName: UpNest-GrowthData-dev
         - DynamoDBReadPolicy:
-            TableName: !ImportValue UpNest-DynamoDB-dev-BabiesTableName
+            TableName: UpNest-Babies-dev
       Events:
         CreateGrowthData:
           Type: Api
@@ -140,9 +140,9 @@ Resources:
       Handler: growth-data-get.lambda_handler
       Policies:
         - DynamoDBReadPolicy:
-            TableName: !ImportValue UpNest-DynamoDB-dev-GrowthDataTableName
+            TableName: UpNest-GrowthData-dev
         - DynamoDBReadPolicy:
-            TableName: !ImportValue UpNest-DynamoDB-dev-BabiesTableName
+            TableName: UpNest-Babies-dev
       Events:
         GetGrowthData:
           Type: Api
@@ -158,9 +158,9 @@ Resources:
       Handler: growth-data-get-single.lambda_handler
       Policies:
         - DynamoDBReadPolicy:
-            TableName: !ImportValue UpNest-DynamoDB-dev-GrowthDataTableName
+            TableName: UpNest-GrowthData-dev
         - DynamoDBReadPolicy:
-            TableName: !ImportValue UpNest-DynamoDB-dev-BabiesTableName
+            TableName: UpNest-Babies-dev
       Events:
         GetSingleGrowthData:
           Type: Api
@@ -176,9 +176,9 @@ Resources:
       Handler: growth-data-list.lambda_handler
       Policies:
         - DynamoDBReadPolicy:
-            TableName: !ImportValue UpNest-DynamoDB-dev-GrowthDataTableName
+            TableName: UpNest-GrowthData-dev
         - DynamoDBReadPolicy:
-            TableName: !ImportValue UpNest-DynamoDB-dev-BabiesTableName
+            TableName: UpNest-Babies-dev
       Events:
         ListGrowthData:
           Type: Api
@@ -194,9 +194,9 @@ Resources:
       Handler: growth-data-update.lambda_handler
       Policies:
         - DynamoDBCrudPolicy:
-            TableName: !ImportValue UpNest-DynamoDB-dev-GrowthDataTableName
+            TableName: UpNest-GrowthData-dev
         - DynamoDBReadPolicy:
-            TableName: !ImportValue UpNest-DynamoDB-dev-BabiesTableName
+            TableName: UpNest-Babies-dev
       Events:
         UpdateGrowthData:
           Type: Api
@@ -212,9 +212,9 @@ Resources:
       Handler: growth-data-delete.lambda_handler
       Policies:
         - DynamoDBCrudPolicy:
-            TableName: !ImportValue UpNest-DynamoDB-dev-GrowthDataTableName
+            TableName: UpNest-GrowthData-dev
         - DynamoDBReadPolicy:
-            TableName: !ImportValue UpNest-DynamoDB-dev-BabiesTableName
+            TableName: UpNest-Babies-dev
       Events:
         DeleteGrowthData:
           Type: Api
@@ -231,7 +231,7 @@ Resources:
       Handler: percentiles_calculate.lambda_handler
       Policies:
         - DynamoDBReadPolicy:
-            TableName: !ImportValue UpNest-DynamoDB-dev-GrowthDataTableName
+            TableName: UpNest-GrowthData-dev
 
   # Advanced Features Functions  
   GetCurrentPercentilesFunction:
@@ -242,9 +242,9 @@ Resources:
       Handler: get_percentiles.lambda_handler
       Policies:
         - DynamoDBReadPolicy:
-            TableName: !ImportValue UpNest-DynamoDB-dev-BabiesTableName
+            TableName: UpNest-Babies-dev
         - DynamoDBReadPolicy:
-            TableName: !ImportValue UpNest-DynamoDB-dev-GrowthDataTableName
+            TableName: UpNest-GrowthData-dev
       Events:
         GetCurrentPercentiles:
           Type: Api
@@ -260,9 +260,9 @@ Resources:
       Handler: get_growth_chart.lambda_handler
       Policies:
         - DynamoDBReadPolicy:
-            TableName: !ImportValue UpNest-DynamoDB-dev-BabiesTableName
+            TableName: UpNest-Babies-dev
         - DynamoDBReadPolicy:
-            TableName: !ImportValue UpNest-DynamoDB-dev-GrowthDataTableName
+            TableName: UpNest-GrowthData-dev
       Events:
         GetGrowthChartData:
           Type: Api
@@ -280,9 +280,9 @@ Resources:
       MemorySize: 512  # More memory for batch processing
       Policies:
         - DynamoDBCrudPolicy:
-            TableName: !ImportValue UpNest-DynamoDB-dev-GrowthDataTableName
+            TableName: UpNest-GrowthData-dev
         - DynamoDBReadPolicy:
-            TableName: !ImportValue UpNest-DynamoDB-dev-BabiesTableName
+            TableName: UpNest-Babies-dev
       Events:
         BulkImportGrowthData:
           Type: Api
@@ -296,3 +296,4 @@ Outputs:
     Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/"
     Export:
       Name: !Sub UpNest-BabyCrud-${Environment}-ApiUrl
+

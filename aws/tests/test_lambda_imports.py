@@ -47,16 +47,16 @@ class TestLambdaFunctions(unittest.TestCase):
     def test_babies_create_import(self):
         """Test that babies_create can be imported."""
         try:
-            import babies.babies_create
-            self.assertTrue(hasattr(babies.babies_create, 'lambda_handler'))
+            import lambdas.babies.babies_create
+            self.assertTrue(hasattr(lambdas.babies.babies_create, 'lambda_handler'))
         except ImportError as e:
             self.fail(f"Could not import babies_create: {e}")
     
     def test_babies_list_import(self):
         """Test that babies_list can be imported."""
         try:
-            import babies.babies_list
-            self.assertTrue(hasattr(babies.babies_list, 'lambda_handler'))
+            import lambdas.babies.babies_list
+            self.assertTrue(hasattr(lambdas.babies.babies_list, 'lambda_handler'))
         except ImportError as e:
             self.fail(f"Could not import babies_list: {e}")
     

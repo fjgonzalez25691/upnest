@@ -11,7 +11,7 @@ from unittest.mock import patch, MagicMock
 import json
 
 # Add the lambda functions directory to the path
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'lambdas'))
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'lambdas', 'shared'))
 
 class TestBasicFunctionality(unittest.TestCase):
     """Test basic functionality of Lambda functions without external dependencies."""
@@ -39,8 +39,8 @@ class TestBasicFunctionality(unittest.TestCase):
         """Test that we can import the Lambda functions without errors."""
         try:
             # Test importing shared utilities
-            from shared import jwt_utils, dynamodb_utils, response_utils
-            from shared.jwt_utils import get_jwt_validator
+            from lambdas.shared import jwt_utils, dynamodb_utils, response_utils
+            from lambdas.shared.jwt_utils import get_jwt_validator
             from shared.dynamodb_utils import get_dynamodb
             from shared.response_utils import success_response, error_response
             

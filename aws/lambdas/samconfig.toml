@@ -9,10 +9,12 @@ parallel = true
 capabilities = "CAPABILITY_IAM"
 confirm_changeset = true
 resolve_s3 = true
-stack_name = "upnest-lambdas-dev"
-s3_prefix = "upnest-lambdas-dev"
+stack_name = "upnest-lambdas-hackathon"
+s3_prefix = "upnest-lambdas-hackathon"
 region = "eu-south-2"
 profile = "fran-dev"
+parameter_overrides = "Environment=\"dev\""
+image_repositories = []
 
 [default.package.parameters]
 resolve_s3 = true

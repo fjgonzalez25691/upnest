@@ -134,9 +134,9 @@ class TestGrowthDataCreate(unittest.TestCase):
             body = json.loads(response['body'])
             self.assertFalse(body['success'])
     
-    @patch('growth_data_create.'))
-    @patch('growth_data_create.'))
-    def test_create_growth_data_baby_not_found(self, mock_get_jwt_validator, mock_get_dynamodb):
+    @patch('growth_data_create.get_jwt_validator')
+    @patch('growth_data_create.get_dynamodb')
+    def test_create_growth_data_baby_not_found(self, mock_get_dynamodb, mock_get_jwt_validator):
         """Test growth data creation when baby doesn't exist."""
         # Mock JWT validation
         mock_jwt_validator = MagicMock()
@@ -157,9 +157,9 @@ class TestGrowthDataCreate(unittest.TestCase):
         body = json.loads(response['body'])
         self.assertFalse(body['success'])
     
-    @patch('growth_data_create.'))
-    @patch('growth_data_create.'))
-    def test_create_growth_data_unauthorized_baby(self, mock_get_jwt_validator, mock_get_dynamodb):
+    @patch('growth_data_create.get_jwt_validator')
+    @patch('growth_data_create.get_dynamodb')
+    def test_create_growth_data_unauthorized_baby(self, mock_get_dynamodb, mock_get_jwt_validator):
         """Test growth data creation for baby owned by different user."""
         # Mock JWT validation
         mock_jwt_validator = MagicMock()
@@ -181,9 +181,9 @@ class TestGrowthDataCreate(unittest.TestCase):
         body = json.loads(response['body'])
         self.assertFalse(body['success'])
     
-    @patch('growth_data_create.'))
-    @patch('growth_data_create.'))
-    def test_create_growth_data_validation_error(self, mock_get_jwt_validator, mock_get_dynamodb):
+    @patch('growth_data_create.get_jwt_validator')
+    @patch('growth_data_create.get_dynamodb')
+    def test_create_growth_data_validation_error(self, mock_get_dynamodb, mock_get_jwt_validator):
         """Test growth data creation with validation errors."""
         # Mock JWT validation
         mock_jwt_validator = MagicMock()
@@ -216,9 +216,9 @@ class TestGrowthDataCreate(unittest.TestCase):
         body = json.loads(response['body'])
         self.assertFalse(body['success'])
     
-    @patch('growth_data_create.'))
-    @patch('growth_data_create.'))
-    def test_create_growth_data_dynamodb_error(self, mock_get_jwt_validator, mock_get_dynamodb):
+    @patch('growth_data_create.get_jwt_validator')
+    @patch('growth_data_create.get_dynamodb')
+    def test_create_growth_data_dynamodb_error(self, mock_get_dynamodb, mock_get_jwt_validator):
         """Test growth data creation with DynamoDB error."""
         # Mock JWT validation
         mock_jwt_validator = MagicMock()
