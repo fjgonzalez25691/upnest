@@ -32,54 +32,72 @@ Parameters:
     Description: Deployment environment
 
 Resources:
-  # Baby Management Functions (Essential)
-  CreateBabyFunction:
+  # Baby Service - UNIFIED HANDLER (replaces 5 functions)
+  BabyServiceFunction:
     Type: AWS::Serverless::Function
     Properties:
-      FunctionName: upnest-create-baby-hackathon
+      FunctionName: upnest-baby-service-hackathon
       CodeUri: babies/
-      Handler: babies_create.lambda_handler
+      Handler: baby_service.lambda_handler
       Policies:
         - DynamoDBCrudPolicy:
             TableName: UpNest-Babies-dev
       Events:
-        CreateBaby:
+        BabiesRoot:
           Type: Api
           Properties:
             Path: /babies
-            Method: post
-            
-  ListBabiesFunction:
-    Type: AWS::Serverless::Function
-    Properties:
-      FunctionName: upnest-list-babies-hackathon
-      CodeUri: babies/
-      Handler: babies_list.lambda_handler
-      Policies:
-        - DynamoDBReadPolicy:
-            TableName: UpNest-Babies-dev
-      Events:
-        ListBabies:
-          Type: Api
-          Properties:
-            Path: /babies
-            Method: get
-
-  GetBabyFunction:
-    Type: AWS::Serverless::Function
-    Properties:
-      FunctionName: upnest-get-baby-hackathon
-      CodeUri: babies/
-      Handler: babies_get.lambda_handler
-      Policies:
-        - DynamoDBReadPolicy:
-            TableName: UpNest-Babies-dev
-      Events:
-        GetBaby:
+            Method: ANY
+        BabiesId:
           Type: Api
           Properties:
             Path: /babies/{babyId}
-            Method: get
+            Method: ANY
+
+  # Growth Data Service - UNIFIED HANDLER (replaces 6 functions)
+  GrowthDataServiceFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: upnest-growth-data-service-hackathon
+      CodeUri: growth-data/
+      Handler: growth_data_service.lambda_handler
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: UpNest-GrowthData-dev
+        - DynamoDBReadPolicy:
+            TableName: UpNest-Babies-dev
+      Events:
+        GrowthDataRoot:
+          Type: Api
+          Properties:
+            Path: /growth-data
+            Method: ANY
+        GrowthDataId:
+          Type: Api
+          Properties:
+            Path: /growth-data/{dataId}
+            Method: ANY
+        BabyGrowthData:
+          Type: Api
+          Properties:
+            Path: /babies/{babyId}/growth
+            Method: GET
+
+  # Percentiles Service - UNIFIED HANDLER for growth percentile calculations
+  PercentilesServiceFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: upnest-percentiles-service-hackathon
+      CodeUri: percentiles/
+      Handler: percentiles_service.lambda_handler
+      Timeout: 60  # Longer timeout for data processing
+      MemorySize: 512  # More memory for pandas/scipy operations
+      Events:
+        PercentilesCalculate:
+          Type: Api
+          Properties:
+            Path: /percentiles/calculate
+            Method: POST
 
 Outputs:
   APIGatewayEndpoint:

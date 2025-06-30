@@ -42,7 +42,7 @@ class TestBasicFunctionality(unittest.TestCase):
             from lambdas.shared import jwt_utils, dynamodb_utils, response_utils
             from lambdas.shared.jwt_utils import get_jwt_validator
             from shared.dynamodb_utils import get_dynamodb
-            from shared.response_utils import success_response, error_response
+            from lambdas.shared.response_utils import success_response, error_response
             
             # Test importing baby functions
             from babies import babies_create, babies_list, babies_get, babies_update, babies_delete
